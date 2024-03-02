@@ -1,0 +1,44 @@
+.bulb {
+  width: 50px;
+  height: 50px;
+  background-color: #f1c40f; /* Yellow color for the bulb */
+  border-radius: 50%;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.bulb:hover {
+  width: 60px;
+  height: 60px;
+  background-color: green; /* Yellow color for the bulb */
+  border-radius: 50%;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.bulb::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #fff; /* White color for the bulb filament */
+  border-radius: 50%;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bulb::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ccc; /* Gray color for the bulb base */
+  border-radius: 50%;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
