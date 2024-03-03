@@ -1,72 +1,33 @@
-# TypeScript React Chrome Extension Boilerplate
+This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
 
-A basic TypeScript React Chrome Extension boilerplate that gets you started quickly. It supports **TypeScript**, **JSX**, and **automatic reloading** during development. Jest, ESLint and Prettier included, all bundled using [Rollup](https://rollupjs.org/guide/en/) and [`rollup-plugin-chrome-extension`](https://extend-chrome.dev/rollup-plugin).
+## Getting Started
 
-## Get Started
+First, run the development server:
 
-### Using `create-react-crx`
-
-Type this into your terminal:
-
-```sh
-npx create-react-crx
+```bash
+pnpm dev
+# or
+npm run dev
 ```
 
-Follow the prompts to setup your Chrome extension project.
+Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
 
-### Using `git clone`
+You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
 
-Type this into your terminal:
+For further guidance, [visit our Documentation](https://docs.plasmo.com/)
 
-```sh
-git clone https://github.com/extend-chrome/ts-react-boilerplate.git my-chrome-extension
-cd my-chrome-extension
-npm install
-```
+## Making production build
 
-> 🖌️ Update your package name and version in `package.json` before you get started!
+Run the following:
 
-### Development
-
-For development with automatic reloading:
-
-```sh
-npm run start
-```
-
-Open the [Extensions Dashboard](chrome://extensions), enable "Developer mode", click "Load unpacked", and choose the `dist` folder.
-
-When you make changes in `src` the background script and any content script will reload automatically.
-
-### Production
-
-When it's time to publish your Chrome extension, make a production build to submit to the Chrome Web Store. This boilerplate will use the version in `package.json`, unless you add a version to `src/manifest.json`.
-
-> Make sure you have updated the name and version of your extension in `package.json`.
-
-Run the following line:
-
-```sh
+```bash
+pnpm build
+# or
 npm run build
 ```
 
-This will create a ZIP file with your package name and version in the `releases`
-folder.
+This should create a production bundle for your extension, ready to be zipped and published to the stores.
 
-## Source Layout
+## Submit to the webstores
 
-Your manifest is at `src/manifest.json`, and Rollup will bundle any files you
-include here. All the filepaths in your manifest should point to files in `src`.
-
-## Features
-
-- Uses Rollup to bundle your extension
-- Chrome Extension automatic reloader
-- Jest configuration for testing
-
-## Resources
-
-[Chrome Extension official documentation](https://developer.chrome.com/docs/webstore/)
-
-[How to Publish your extension step by step video tutorial](https://www.youtube.com/playlist?list=PLYlOQabA4Mm0bPiMKIBMgZK0u2jbYsrC6)
-
+The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
