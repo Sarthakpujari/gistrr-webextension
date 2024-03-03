@@ -30,7 +30,56 @@
 }
 
 .sidebar-toggle {
+  right: 0px;
+  cursor: pointer;
+}
+
+.float-button {
+  right: 0px;
+  cursor: pointer;
+}
+
+.floating-container {
   position: fixed;
-  right: 4.7px;
-  bottom: 47px;
+  right: 0px;
+  bottom: 40px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 80%;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-content {
+  color: #1b141d;
 }
