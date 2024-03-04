@@ -10,6 +10,10 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "framer-motion": "^11.0.8",
     "plasmo": "0.84.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"

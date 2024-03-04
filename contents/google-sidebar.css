@@ -49,7 +49,6 @@
   z-index: 1000;
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -82,4 +81,12 @@
 
 .modal-content {
   color: #1b141d;
+}
+
+.input-field {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  justify-content: center;
 }
