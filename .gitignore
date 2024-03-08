@@ -11,6 +11,7 @@
 
 #cache
 .turbo
+.idea
 
 # misc
 .DS_Store
