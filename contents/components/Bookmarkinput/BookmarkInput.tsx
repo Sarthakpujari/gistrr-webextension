@@ -8,11 +8,12 @@ import {
   ModalCloseButton,
   Button,
   Input,
-  FormControl,
-  FormLabel,
-  FormHelperText,
+  Text,
+  Box,
+  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState, type SetStateAction } from "react";
+import "./BookmarkInput.css";
 
 export const BookmarkInput = ({
   openModal,
@@ -21,8 +22,11 @@ export const BookmarkInput = ({
   openModal: boolean;
   setOpenModal: (value: SetStateAction<boolean>) => void;
 }) => {
-  const [url, setUrl] = useState<string>("");
   const [title, setTitle] = useState<string>("");
+  const [comments, setComments] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
+  const [brain, setBrain] = useState<string>("");
 
   useEffect(() => {
     setTitle(document.title);
@@ -31,25 +35,61 @@ export const BookmarkInput = ({
 
   return (
     <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-      <ModalOverlay />
+      <ModalOverlay
+        bg="blackAlpha.300"
+        backdropFilter="blur(10px) hue-rotate(90deg)"
+      />
       <ModalContent>
-        <ModalHeader>Add your Bookmark!</ModalHeader>
+        <ModalHeader>Save Bookmark</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <div>
-            <FormControl>
-              <FormLabel>Bookmark Title</FormLabel>
-              <FormHelperText>Add your bookmark title</FormHelperText>
-              <Input type="text" value={title} style={{ marginTop: "10px" }} />
-            </FormControl>
-          </div>
-          <div style={{ marginTop: "30px" }}>
-            <FormControl>
-              <FormLabel>Bookmark URL</FormLabel>
-              <FormHelperText>Paste your bookmark URL here</FormHelperText>
-              <Input type="text" value={url} style={{ marginTop: "10px" }} />
-            </FormControl>
-          </div>
+          <Box className="bookmark-input">
+            <Box className="input_container">
+              <Text mb="12px" marginTop={2}>
+                Title:
+              </Text>
+              <Input
+                placeholder="Enter Title"
+                value={title}
+                marginLeft="10px"
+              />
+            </Box>
+            <Box className="input_container_textarea">
+              <Text mb="12px" marginTop={2}>
+                Notes:
+              </Text>
+              <Textarea
+                placeholder="Enter your comments here"
+                value={comments}
+              />
+            </Box>
+            <Box className="input_container">
+              <Text mb="12px" marginTop={2}>
+                URL:
+              </Text>
+              <Input
+                placeholder="Enter bookmark URL"
+                value={url}
+                marginLeft="10px"
+              />
+            </Box>
+            <Box className="input_container">
+              <Text mb="12px" marginTop={2}>
+                Tags:
+              </Text>
+              <Input placeholder="Enter Tags" marginLeft="7px" />
+            </Box>
+            <Box className="input_container">
+              <Text mb="12px" marginTop={2}>
+                Brain:
+              </Text>
+              <Input
+                placeholder="Enter name of your Brain"
+                value={brain}
+                marginLeft="5px"
+              />
+            </Box>
+          </Box>
         </ModalBody>
         <ModalFooter>
           <Button

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 import { BookmarkInput } from "./components/Bookmarkinput";
 
@@ -22,16 +22,35 @@ export const getStyle = () => {
 
 export const getShadowHostId = () => "plasmo-google-sidebar";
 
+const theme = extendTheme({
+  components: {
+    Modal: {
+      baseStyle: (props) => ({
+        dialog: {
+          bg: "#F8F5F1",
+        },
+      }),
+    },
+    Input: {
+      baseStyle: {
+        bg: "#F2F2F2",
+        _focus: { bg: "#F2F2F2" },
+        _hover: { bg: "#F2F2F2" },
+      },
+    },
+  },
+});
+
 const GoogleSidebar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(true);
 
   useEffect(() => {
     document.body.classList.toggle("plasmo-google-sidebar-show", isOpen);
   }, [isOpen]);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <div id="sidebar" className={isOpen ? "open" : "closed"}>
         <div className="floating-container">
           <button className="sidebar-toggle" onClick={() => setIsOpen(!isOpen)}>
