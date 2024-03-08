@@ -1,0 +1,33 @@
+.sticky-container {
+  position: fixed;
+  bottom: 20px; /* Adjust the distance from the bottom */
+  right: 20px; /* Adjust the distance from the right */
+  display: flex;
+  flex-direction: column-reverse; /* Stack buttons vertically and reverse order */
+  align-items: flex-end; /* Align buttons to the right */
+}
+
+.sticky-button {
+  background-color: #3498db; /* Button background color */
+  color: #fff; /* Button text color */
+  padding: 10px 20px; /* Adjust padding as needed */
+  margin-top: 10px; /* Add margin between buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 9999; /* Ensure the buttons stay above other elements */
+}
+
+.sticky-button:hover {
+  background-color: #2980b9; /* Button background color on hover */
+}
+
+.floating-container {
+  position: fixed;
+  right: 0px;
+  bottom: 80px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
