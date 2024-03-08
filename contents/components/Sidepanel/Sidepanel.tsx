@@ -1,3 +1,4 @@
+import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   Button,
   DrawerBody,
@@ -6,10 +7,18 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  Input,
   Drawer,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Box,
 } from "@chakra-ui/react";
-import type { Dispatch, SetStateAction } from "react";
+import { ChatIcon } from "../Icons/ChatIcon";
+import { HistoryIcon } from "../Icons/HistoryIcon";
+
+import "./Sidepanel.css";
 
 export const Sidepanel = ({
   openDrawer,
@@ -18,6 +27,8 @@ export const Sidepanel = ({
   openDrawer: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const [tabIndex, setTabIndex] = useState<number>(0);
+
   return (
     <Drawer
       isOpen={openDrawer}
@@ -27,17 +38,43 @@ export const Sidepanel = ({
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Create your account</DrawerHeader>
-
+        <DrawerHeader bgColor="green" color="white">
+          Gistrr
+        </DrawerHeader>
         <DrawerBody>
-          <Input placeholder="Type here..." />
+          <Tabs align="center" isFitted={true} marginTop={4}>
+            <TabList>
+              <Tab onClick={() => setTabIndex(0)}>
+                <Box className="tab-header">
+                  <Box>
+                    <ChatIcon />
+                  </Box>
+                  <Box>Chat</Box>
+                </Box>
+              </Tab>
+              <Tab onClick={() => setTabIndex(1)}>
+                <Box className="tab-header">
+                  <Box>
+                    <HistoryIcon />
+                  </Box>
+                  <Box>History</Box>
+                </Box>
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <p>one!</p>
+              </TabPanel>
+              <TabPanel>
+                <p>two!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </DrawerBody>
-
         <DrawerFooter>
-          <Button variant="outline" mr={3} onClick={() => setOpenDrawer(false)}>
-            Cancel
-          </Button>
-          <Button colorScheme="blue">Save</Button>
+          {tabIndex === 0 && (
+            <Button colorScheme="blue">Create New Chat</Button>
+          )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

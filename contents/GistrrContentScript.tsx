@@ -23,16 +23,15 @@ export const config: PlasmoCSConfig = {
 
 const GoogleSidebar = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(true);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
 
   useEffect(() => {
-    if (openModal === false) setHideFloatingButtons(false);
-    else setHideFloatingButtons(true);
-
-    if (openDrawer === false) setHideFloatingButtons(false);
-    else setHideFloatingButtons(true);
+    // if (openModal === false) setHideFloatingButtons(false);
+    // else setHideFloatingButtons(true);
+    // if (openDrawer === false) setHideFloatingButtons(false);
+    // else setHideFloatingButtons(true);
   }, [openModal, openDrawer]);
 
   return (
