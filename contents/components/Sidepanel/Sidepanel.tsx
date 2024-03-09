@@ -15,10 +15,13 @@ import {
   TabPanel,
   Box,
 } from "@chakra-ui/react";
+import { ChatPanel } from "./Chatpanel";
+
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
 
 import "./Sidepanel.css";
+import { SearchBar } from "./Searchbar/SearchBar";
 
 export const Sidepanel = ({
   openDrawer,
@@ -62,11 +65,12 @@ export const Sidepanel = ({
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
-                <p>one!</p>
+              <TabPanel paddingLeft={0} paddingRight={0}>
+                <SearchBar />
+                <ChatPanel />
               </TabPanel>
-              <TabPanel>
-                <p>two!</p>
+              <TabPanel paddingLeft={0} paddingRight={0}>
+                <SearchBar />
               </TabPanel>
             </TabPanels>
           </Tabs>
