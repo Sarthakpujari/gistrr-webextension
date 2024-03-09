@@ -2,3 +2,13 @@
   display: flex;
   gap: 10px;
 }
+
+.side-panel-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.more-icon {
+  margin-top: 6px;
+  cursor: pointer;
+}

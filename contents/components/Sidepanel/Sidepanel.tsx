@@ -2,7 +2,6 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   Button,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
@@ -16,19 +15,23 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { ChatPanel } from "./Chatpanel";
-
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
+import { SearchBar } from "./Searchbar/SearchBar";
+import { MoreIcon } from "../Icons/MoreIcon";
 
 import "./Sidepanel.css";
-import { SearchBar } from "./Searchbar/SearchBar";
 
 export const Sidepanel = ({
   openDrawer,
+  openBrainModal,
   setOpenDrawer,
+  setOpenBrainModal,
 }: {
   openDrawer: boolean;
+  openBrainModal: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  setOpenBrainModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
@@ -40,9 +43,18 @@ export const Sidepanel = ({
     >
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader bgColor="green" color="white">
+        <DrawerHeader
+          bgColor="green"
+          color="white"
+          className="side-panel-header"
+        >
           Gistrr
+          <Box
+            className="more-icon"
+            onClick={() => setOpenBrainModal(!openBrainModal)}
+          >
+            <MoreIcon />
+          </Box>
         </DrawerHeader>
         <DrawerBody>
           <Tabs align="center" isFitted={true} marginTop={4}>

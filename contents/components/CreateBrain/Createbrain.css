@@ -1,0 +1,17 @@
+.bookmark-input {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.input_container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.input_container1 {
+  display: flex;
+  align-items: center;
+}

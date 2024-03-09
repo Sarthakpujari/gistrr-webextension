@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Button, ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { BookmarkInput } from "./components/Bookmarkinput";
 import { Sidepanel } from "./components/Sidepanel/Sidepanel";
 import { FloatingButtons } from "./components/Floatingbuttons";
 import { theme } from "./chakraThemeExtend";
+import { CreateBrain } from "./components/CreateBrain";
 
 import type { PlasmoCSConfig } from "plasmo";
 
@@ -26,6 +27,7 @@ const GoogleSidebar = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(true);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
+  const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
 
   useEffect(() => {
     // if (openModal === false) setHideFloatingButtons(false);
@@ -43,7 +45,16 @@ const GoogleSidebar = () => {
         setHideFloatingButtons={setHideFloatingButtons}
       />
       <BookmarkInput openModal={openModal} setOpenModal={setOpenModal} />
-      <Sidepanel openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+      <Sidepanel
+        openDrawer={openDrawer}
+        openBrainModal={openBrainModal}
+        setOpenBrainModal={setOpenBrainModal}
+        setOpenDrawer={setOpenDrawer}
+      />
+      <CreateBrain
+        openBrainModal={openBrainModal}
+        setOpenBrainModal={setOpenBrainModal}
+      />
     </ChakraProvider>
   );
 };
