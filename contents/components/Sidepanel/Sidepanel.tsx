@@ -27,11 +27,13 @@ export const Sidepanel = ({
   openBrainModal,
   setOpenDrawer,
   setOpenBrainModal,
+  closeDrawerOpenChat,
 }: {
   openDrawer: boolean;
   openBrainModal: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
   setOpenBrainModal: Dispatch<SetStateAction<boolean>>;
+  closeDrawerOpenChat: () => void;
 }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
@@ -79,7 +81,7 @@ export const Sidepanel = ({
             <TabPanels>
               <TabPanel paddingLeft={0} paddingRight={0}>
                 <SearchBar />
-                <ChatPanel />
+                <ChatPanel closeDrawerOpenChat={closeDrawerOpenChat} />
               </TabPanel>
               <TabPanel paddingLeft={0} paddingRight={0}>
                 <SearchBar />

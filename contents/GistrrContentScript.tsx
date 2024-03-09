@@ -12,6 +12,7 @@ import type { PlasmoCSConfig } from "plasmo";
 import "./GistrrContentScript.css";
 
 import cssText from "data-text:~/contents/GistrrContentScript.css";
+import { Chatwindow } from "./components/Chatwindow";
 export const getStyle = () => {
   const style = document.createElement("style");
   style.textContent = cssText;
@@ -25,9 +26,10 @@ export const config: PlasmoCSConfig = {
 const GoogleSidebar = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(true);
+  const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
+  const [openChatWindow, setOpenChatWindow] = useState<boolean>(false);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
-  const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
 
   useEffect(() => {
     // if (openModal === false) setHideFloatingButtons(false);
@@ -36,24 +38,39 @@ const GoogleSidebar = () => {
     // else setHideFloatingButtons(true);
   }, [openModal, openDrawer]);
 
+  const closeDrawerOpenChat = () => {
+    setOpenDrawer(false);
+    setOpenChatWindow(true);
+  };
+
+  const closeChatOpenDrawer = () => {
+    setOpenChatWindow(false);
+    setOpenDrawer(true);
+  };
+
   return (
     <ChakraProvider theme={theme}>
+      <BookmarkInput openModal={openModal} setOpenModal={setOpenModal} />
+      <CreateBrain
+        openBrainModal={openBrainModal}
+        setOpenBrainModal={setOpenBrainModal}
+      />
       <FloatingButtons
         setOpenDrawer={setOpenDrawer}
         setOpenModal={setOpenModal}
         hideFloatingButtons={hideFloatingButtons}
         setHideFloatingButtons={setHideFloatingButtons}
       />
-      <BookmarkInput openModal={openModal} setOpenModal={setOpenModal} />
       <Sidepanel
         openDrawer={openDrawer}
-        openBrainModal={openBrainModal}
-        setOpenBrainModal={setOpenBrainModal}
         setOpenDrawer={setOpenDrawer}
-      />
-      <CreateBrain
         openBrainModal={openBrainModal}
         setOpenBrainModal={setOpenBrainModal}
+        closeDrawerOpenChat={closeDrawerOpenChat}
+      />
+      <Chatwindow
+        openChatWindow={openChatWindow}
+        closeChatOpenDrawer={closeChatOpenDrawer}
       />
     </ChakraProvider>
   );
