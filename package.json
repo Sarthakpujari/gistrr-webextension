@@ -14,6 +14,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "firebase": "^10.8.1",
     "framer-motion": "^11.0.8",
     "plasmo": "^0.85.0",
     "react": "18.2.0",
@@ -33,7 +34,19 @@
       "https://*/*"
     ],
     "permissions": [
-      "tabs"
-    ]
+      "tabs",
+      "storage",
+      "activeTab",
+      "scripting",
+      "identity"
+    ],
+    "oauth2": {
+      "client_id": "703242511198-qe308ulctrjkun42duv00no7dg3g7ukh.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ]
+    },
+    "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAh3yT3+48jxYyn0Mp3Uyxu2TvG9V09TfkVB1xSLL9DsYaqolBmhzI6LsrO1wyBbt+QOD2xhNUYfWy1+3yVsLVjA/Y11mkUCf+bnRoaqsE7rzIyb6cMb0ux/bCt0x0G1/JWUnn+FFBx7OpxZswTulJHzJrc6kZwsH5kAhg7jHCn1IbR+CVUUoQrbsdACcwEhLgfzbcc/ftCo2lB/6GPvngiF6oaSxx0vmCENCfqy7MTGkxcOYaAtm0Mphwj1wpJERzk9jtbXzNRw1R44URFmcTVuzlPrcO5DZOIDQVrV+rSwRT6Im+E4f3HGQk/LgR0JocVIRZTwHh3FgWfcFyEOHm3QIDAQAB-----END PUBLIC KEY-----"
   }
 }

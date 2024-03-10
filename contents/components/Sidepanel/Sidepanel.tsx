@@ -21,6 +21,7 @@ import { SearchBar } from "./Searchbar/SearchBar";
 import { MoreIcon } from "../Icons/MoreIcon";
 
 import "./Sidepanel.css";
+import { initFirebaseApp } from "~util/firebase_auth";
 
 export const Sidepanel = ({
   openDrawer,
@@ -91,7 +92,23 @@ export const Sidepanel = ({
         </DrawerBody>
         <DrawerFooter>
           {tabIndex === 0 && (
-            <Button colorScheme="blue">Create New Chat</Button>
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                // Send a message to the background script
+                chrome.runtime.sendMessage(
+                  { greeting: "Hello from content script" },
+                  function (response) {
+                    console.log(
+                      "Received response from background script:",
+                      response
+                    );
+                  }
+                );
+              }}
+            >
+              Sign in to Google
+            </Button>
           )}
         </DrawerFooter>
       </DrawerContent>
