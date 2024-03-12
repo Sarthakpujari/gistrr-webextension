@@ -6,7 +6,7 @@ import {
   setPersistence,
   signInWithCredential,
 } from "firebase/auth";
-import { firebaseApp } from "./util/firebase_config";
+import { firebaseApp } from "../util/firebase_config";
 
 const auth = getAuth(firebaseApp);
 setPersistence(auth, browserLocalPersistence);
@@ -63,6 +63,11 @@ export const initFirebaseApp = () => {
       console.log("current");
       console.log(user);
       console.log(user.token);
+      // sendLoginDataToContentScript({
+      //   target: "login-response",
+      //   user,
+      //   status: "login success",
+      // });
     } else {
       console.log("No user");
       startSignIn();
@@ -71,12 +76,15 @@ export const initFirebaseApp = () => {
 };
 
 function init() {
-  // Detect auth state
   onAuthStateChanged(auth, (user) => {
     if (user != null) {
       console.log("Below User is logged in:");
       console.log(user);
-      window.location.replace("./main.html");
+      // sendLoginDataToContentScript({
+      //   target: "login-response",
+      //   user,
+      //   status: "already loggedin",
+      // });
     } else {
       console.log("No user logged in!");
     }
@@ -84,15 +92,20 @@ function init() {
 }
 
 init();
-
 initFirebaseApp();
 
-// Listen for messages from content scripts
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  initFirebaseApp();
-  console.log("chrome.identity >>> ", chrome);
-  console.log("Received message from content script:", request);
+// const sendLoginDataToContentScript = (user) => {
+//   chrome.runtime.sendMessage({ target: "login-response", user });
+// };
 
-  // Send a response back to the content script
-  sendResponse({ farewell: "Goodbye from background script" });
-});
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   switch (request.target) {
+//     case "login-request":
+//       initFirebaseApp();
+//       break;
+//     default:
+//       sendResponse({ target: "Invalid login message" });
+//       break;
+//   }
+//   return true;
+// });
