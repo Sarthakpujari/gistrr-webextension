@@ -1,4 +1,4 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import {
   Button,
   DrawerBody,
@@ -38,13 +38,36 @@ export const Sidepanel = ({
   closeDrawerOpenChat: () => void;
 }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
+  const [userName, setUserName] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [userPhoto, setUserPhoto] = useState<string>("");
 
-  const initiateFirebaseMessage = async () => {
-    const resp = await sendToBackground({
+  useEffect(() => {
+    fetchUserFromBackground();
+  }, []);
+
+  const fetchUserFromBackground = async () => {
+    const response = await sendToBackground({
       name: "login",
       body: { action: "login" },
     });
-    console.log("resp >>> ", resp);
+    const { email, displayName, photoURL } = response.user;
+    console.log("email, name, photoURL", email, displayName, photoURL);
+    setUserEmail(email);
+    setUserName(displayName);
+    setUserPhoto(photoURL);
+  };
+
+  const loginStatus = () => {
+    if (userName) {
+      return null;
+    } else {
+      return (
+        <Button colorScheme="blue" onClick={fetchUserFromBackground}>
+          G
+        </Button>
+      );
+    }
   };
 
   return (
@@ -60,6 +83,7 @@ export const Sidepanel = ({
           color="white"
           className="side-panel-header"
         >
+          <img width={30} height={20} src={userPhoto} />
           Gistrr
           <Box
             className="more-icon"
@@ -99,13 +123,7 @@ export const Sidepanel = ({
             </TabPanels>
           </Tabs>
         </DrawerBody>
-        <DrawerFooter>
-          {tabIndex === 0 && (
-            <Button colorScheme="blue" onClick={initiateFirebaseMessage}>
-              Sign in to Google
-            </Button>
-          )}
-        </DrawerFooter>
+        <DrawerFooter>{tabIndex === 0 && loginStatus()}</DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
