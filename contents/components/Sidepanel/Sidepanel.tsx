@@ -1,4 +1,4 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   Button,
   DrawerBody,
@@ -40,29 +40,11 @@ export const Sidepanel = ({
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const initiateFirebaseMessage = async () => {
-    console.log("ext id >>>", chrome.runtime.id);
-
     const resp = await sendToBackground({
-      name: "ping",
-      body: {
-        id: 123,
-      },
+      name: "login",
+      body: { action: "login" },
     });
     console.log("resp >>> ", resp);
-    // chrome.runtime.sendMessage({ target: "login-request" });
-    // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    //   console.log("message received from background script");
-    //   console.log(request);
-    //   // switch (request.target) {
-    //   //   case "login-response":
-    //   //     console.log("login");
-    //   //     console.log(request.user);
-    //   //     break;
-    //   //   default:
-    //   //     console.log("invalid login request");
-    //   //     break;
-    //   // }
-    // });
   };
 
   return (

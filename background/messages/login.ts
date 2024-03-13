@@ -6,25 +6,23 @@ import {
   setPersistence,
   signInWithCredential,
 } from "firebase/auth";
-import { firebaseApp } from "./firebase_config";
+
+import { firebaseApp } from "../../util/firebase_config";
+import { Storage } from "@plasmohq/storage";
+
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 
 const auth = getAuth(firebaseApp);
 setPersistence(auth, browserLocalPersistence);
 
-function startAuth(interactive) {
+export function startAuth(interactive) {
   console.log("Auth trying");
   chrome.identity.getAuthToken({ interactive: true }, function (token) {
-    //Token:  This requests an OAuth token from the Chrome Identity API.
     if (chrome.runtime.lastError && !interactive) {
       console.log("It was not possible to get a token programmatically.");
     } else if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
     } else if (token) {
-      // Follows: https://firebase.google.com/docs/auth/web/google-signin
-      // Authorize Firebase with the OAuth Access Token.
-      // console.log("TOKEN:")
-      // console.log(token)
-      // Builds Firebase credential with the Google ID token.
       const credential = GoogleAuthProvider.credential(null, token);
       signInWithCredential(auth, credential)
         .then((result) => {
@@ -32,7 +30,6 @@ function startAuth(interactive) {
           console.log(result);
         })
         .catch((error) => {
-          // You can handle errors here
           console.log(error);
         });
     } else {
@@ -41,9 +38,8 @@ function startAuth(interactive) {
   });
 }
 
-function startSignIn() {
+export function startSignIn() {
   console.log("started SignIn");
-  //https://firebase.google.com/docs/auth/web/manage-users
   const user = auth.currentUser;
   if (user) {
     console.log("current");
@@ -55,14 +51,14 @@ function startSignIn() {
   }
 }
 
-export const initFirebaseApp = () => {
-  console.log("initFirebaseApp");
-  onAuthStateChanged(auth, (user) => {
+export const signin = async (req, res, storage) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user != null) {
       console.log("logged in!");
       console.log("current");
       console.log(user);
-      console.log(user.token);
+      await storage.set("user", user);
+      await res.send({ user });
     } else {
       console.log("No user");
       startSignIn();
@@ -70,17 +66,25 @@ export const initFirebaseApp = () => {
   });
 };
 
-function init() {
-  // Detect auth state
-  onAuthStateChanged(auth, (user) => {
-    if (user != null) {
-      console.log("Below User is logged in:");
-      console.log(user);
-      window.location.replace("./main.html");
-    } else {
-      console.log("No user logged in!");
+const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+  console.log("req >>> ", req);
+  const action = req.body.action;
+  const storage = new Storage();
+  const user = await storage.get("user");
+  if (user) {
+    console.log("login not required");
+    res.send({ user });
+  } else {
+    switch (action) {
+      case "login":
+        console.log("login required");
+        signin(req, res, storage);
+        break;
+      default:
+        res.send("Invalid action!");
+        break;
     }
-  });
-}
+  }
+};
 
-init();
+export default handler;
