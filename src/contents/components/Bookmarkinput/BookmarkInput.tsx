@@ -11,8 +11,13 @@ import {
   Text,
   Box,
   Textarea,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
-import { useEffect, useState, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type SetStateAction } from "react";
 import "./BookmarkInput.css";
 
 export const BookmarkInput = ({
@@ -27,6 +32,12 @@ export const BookmarkInput = ({
   const [url, setUrl] = useState<string>("");
   const [tags, setTags] = useState<string>("");
   const [brain, setBrain] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
+
+  const fileInputRef = useRef(null);
+  const handleFileUploadClick = () => {
+    fileInputRef.current.click();
+  };
 
   useEffect(() => {
     setTitle(document.title);
@@ -54,25 +65,7 @@ export const BookmarkInput = ({
                 marginLeft="10px"
               />
             </Box>
-            <Box className="input_container_textarea">
-              <Text mb="12px" marginTop={2}>
-                Notes:
-              </Text>
-              <Textarea
-                placeholder="Enter your comments here"
-                value={comments}
-              />
-            </Box>
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                URL:
-              </Text>
-              <Input
-                placeholder="Enter bookmark URL"
-                value={url}
-                marginLeft="10px"
-              />
-            </Box>
+
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
                 Tags:
@@ -89,6 +82,69 @@ export const BookmarkInput = ({
                 marginLeft="5px"
               />
             </Box>
+            <Tabs variant="soft-rounded" colorScheme="green">
+              <TabList>
+                <Tab>Links</Tab>
+                <Tab>Documents</Tab>
+                <Tab>Notes</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      URL:
+                    </Text>
+                    <Input
+                      placeholder="Enter bookmark URL"
+                      value={url}
+                      marginLeft="10px"
+                    />
+                  </Box>
+                </TabPanel>
+                <TabPanel>
+                  <Box className="input_container_textarea">
+                    <Text mb="12px" marginTop={2}>
+                      Notes:
+                    </Text>
+                    <Textarea
+                      placeholder="Enter your comments here"
+                      value={comments}
+                    />
+                  </Box>
+                </TabPanel>
+                <TabPanel>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Upload:
+                    </Text>
+                    <Box className="upload_field">
+                      <Box>
+                        <Input
+                          value={fileName}
+                          marginLeft="5px"
+                          placeholder="Supported files .jpg .png .doc .docx .pdf"
+                        />
+                      </Box>
+                      <Box>
+                        <Button
+                          colorScheme="blue"
+                          size="sm"
+                          variant="outline"
+                          onClick={handleFileUploadClick}
+                        >
+                          Browse
+                        </Button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          style={{ display: "none" }}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Box>
         </ModalBody>
         <ModalFooter>

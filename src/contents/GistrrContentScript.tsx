@@ -20,7 +20,7 @@ export const getStyle = () => {
 };
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://www.google.com/*"],
+  matches: ["<all_urls>"],
 };
 
 const GoogleSidebar = () => {
