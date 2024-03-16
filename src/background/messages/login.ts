@@ -67,7 +67,6 @@ export const signin = async (req, res, storage) => {
 };
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  console.log("req >>> ", req);
   const action = req.body.action;
   const storage = new Storage();
   const user = await storage.get("user");

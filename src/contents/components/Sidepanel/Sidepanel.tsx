@@ -15,6 +15,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { sendToBackground } from "@plasmohq/messaging";
+import { Storage } from "@plasmohq/storage";
 
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
@@ -43,19 +44,32 @@ export const Sidepanel = ({
   const [userPhoto, setUserPhoto] = useState<string>("");
 
   useEffect(() => {
-    fetchUserFromBackground();
+    userDetailsFromStore();
   }, []);
 
+  const userDetailsFromStore = async () => {
+    const storage = new Storage();
+    const user: { email: string; displayName: string; photoURL: string } =
+      await storage.get("user");
+
+    if (user) {
+      const { email, displayName, photoURL } = user;
+      setUserEmail(email);
+      setUserName(displayName);
+      setUserPhoto(photoURL);
+    }
+  };
+
   const fetchUserFromBackground = async () => {
-    const response = await sendToBackground({
-      name: "login",
-      body: { action: "login" },
-    });
-    const { email, displayName, photoURL } = response.user;
-    console.log("email, name, photoURL", email, displayName, photoURL);
-    setUserEmail(email);
-    setUserName(displayName);
-    setUserPhoto(photoURL);
+    try {
+      await sendToBackground({
+        name: "login",
+        body: { action: "login" },
+      });
+      userDetailsFromStore();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const loginStatus = () => {
@@ -83,7 +97,7 @@ export const Sidepanel = ({
           color="white"
           className="side-panel-header"
         >
-          <img width={30} height={20} src={userPhoto} />
+          {userPhoto && <img width={30} height={20} src={userPhoto} />}
           Gistrr
           <Box
             className="more-icon"
