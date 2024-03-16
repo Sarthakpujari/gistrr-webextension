@@ -55,6 +55,71 @@ export const BookmarkInput = ({
         <ModalCloseButton />
         <ModalBody>
           <Box className="bookmark-input">
+            <Box>
+              <Tabs variant="soft-rounded" colorScheme="green">
+                <TabList>
+                  <Tab>Links</Tab>
+                  <Tab>Documents</Tab>
+                  <Tab>Notes</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel paddingLeft={0} paddingRight={0}>
+                    <Box className="input_container">
+                      <Text mb="12px" marginTop={2}>
+                        URL:
+                      </Text>
+                      <Input
+                        placeholder="Enter bookmark URL"
+                        value={url}
+                        marginLeft="10px"
+                      />
+                    </Box>
+                  </TabPanel>
+                  <TabPanel paddingLeft={0} paddingRight={0}>
+                    <Box className="input_container_textarea">
+                      <Text mb="12px" marginTop={2}>
+                        Notes:
+                      </Text>
+                      <Textarea
+                        placeholder="Enter your comments here"
+                        value={comments}
+                      />
+                    </Box>
+                  </TabPanel>
+                  <TabPanel paddingLeft={0} paddingRight={0}>
+                    <Box className="input_container">
+                      <Text mb="12px" marginTop={2}>
+                        Upload:
+                      </Text>
+                      <Box className="upload_field">
+                        <Box>
+                          <Input
+                            value={fileName}
+                            marginLeft="5px"
+                            placeholder="Supported files .jpg .png .doc .docx .pdf"
+                          />
+                        </Box>
+                        <Box>
+                          <Button
+                            colorScheme="blue"
+                            size="sm"
+                            variant="outline"
+                            onClick={handleFileUploadClick}
+                          >
+                            Browse
+                          </Button>
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Box>
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
                 Title:
@@ -82,69 +147,6 @@ export const BookmarkInput = ({
                 marginLeft="5px"
               />
             </Box>
-            <Tabs variant="soft-rounded" colorScheme="green">
-              <TabList>
-                <Tab>Links</Tab>
-                <Tab>Documents</Tab>
-                <Tab>Notes</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <Box className="input_container">
-                    <Text mb="12px" marginTop={2}>
-                      URL:
-                    </Text>
-                    <Input
-                      placeholder="Enter bookmark URL"
-                      value={url}
-                      marginLeft="10px"
-                    />
-                  </Box>
-                </TabPanel>
-                <TabPanel>
-                  <Box className="input_container_textarea">
-                    <Text mb="12px" marginTop={2}>
-                      Notes:
-                    </Text>
-                    <Textarea
-                      placeholder="Enter your comments here"
-                      value={comments}
-                    />
-                  </Box>
-                </TabPanel>
-                <TabPanel>
-                  <Box className="input_container">
-                    <Text mb="12px" marginTop={2}>
-                      Upload:
-                    </Text>
-                    <Box className="upload_field">
-                      <Box>
-                        <Input
-                          value={fileName}
-                          marginLeft="5px"
-                          placeholder="Supported files .jpg .png .doc .docx .pdf"
-                        />
-                      </Box>
-                      <Box>
-                        <Button
-                          colorScheme="blue"
-                          size="sm"
-                          variant="outline"
-                          onClick={handleFileUploadClick}
-                        >
-                          Browse
-                        </Button>
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          style={{ display: "none" }}
-                        />
-                      </Box>
-                    </Box>
-                  </Box>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
           </Box>
         </ModalBody>
         <ModalFooter>
