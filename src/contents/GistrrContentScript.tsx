@@ -13,6 +13,7 @@ import "./GistrrContentScript.css";
 
 import cssText from "data-text:~/contents/GistrrContentScript.css";
 import { Chatwindow } from "./components/Chatwindow";
+
 export const getStyle = () => {
   const style = document.createElement("style");
   style.textContent = cssText;
@@ -25,18 +26,11 @@ export const config: PlasmoCSConfig = {
 
 const GoogleSidebar = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [openDrawer, setOpenDrawer] = useState<boolean>(true);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
   const [openChatWindow, setOpenChatWindow] = useState<boolean>(false);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
-
-  useEffect(() => {
-    // if (openModal === false) setHideFloatingButtons(false);
-    // else setHideFloatingButtons(true);
-    // if (openDrawer === false) setHideFloatingButtons(false);
-    // else setHideFloatingButtons(true);
-  }, [openModal, openDrawer]);
 
   const closeDrawerOpenChat = () => {
     setOpenDrawer(false);
@@ -59,7 +53,6 @@ const GoogleSidebar = () => {
         setOpenDrawer={setOpenDrawer}
         setOpenModal={setOpenModal}
         hideFloatingButtons={hideFloatingButtons}
-        setHideFloatingButtons={setHideFloatingButtons}
       />
       <Sidepanel
         openDrawer={openDrawer}

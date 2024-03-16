@@ -117,6 +117,11 @@ export const Sidepanel = ({
           className="side-panel-header"
         >
           <Box display="flex" justifyContent="space-between" width="100%">
+            <Box className="floating-close-button">
+              <Button colorScheme="green" onClick={() => setOpenDrawer(false)}>
+                Close
+              </Button>
+            </Box>
             <Box>
               {userPhoto && <img width={30} height={20} src={userPhoto} />}
             </Box>

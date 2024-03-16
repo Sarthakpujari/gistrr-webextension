@@ -1,30 +1,28 @@
-import { Box, Button } from "@chakra-ui/react";
+/**
+ *
+ * Chakra styles wont work here, the css for this file is written in GistrrContentScript.css
+ */
+
+import { BookmarkIcon } from "../Icons/BookmarkIcon";
+import { PanelIcon } from "../Icons/PanelIcon";
 
 export const FloatingButtons = ({
   setOpenDrawer,
   setOpenModal,
   hideFloatingButtons,
-  setHideFloatingButtons,
 }) => {
   if (hideFloatingButtons) return null;
   return (
-    <Box className="floating-container">
-      <Button
-        onClick={() => {
-          setOpenDrawer(true);
-          setHideFloatingButtons(true);
-        }}
-      >
-        Open Drawer
-      </Button>
-      <Button
-        onClick={() => {
-          setOpenModal(true);
-          setHideFloatingButtons(true);
-        }}
-      >
-        Open Modal
-      </Button>
-    </Box>
+    <div className="floating-container">
+      <div className="floating-button-container">
+        <div onClick={() => setOpenDrawer(true)} style={{ cursor: "pointer" }}>
+          <PanelIcon />
+        </div>
+        <hr className="floating-button-separator" />
+        <div onClick={() => setOpenModal(true)} style={{ cursor: "pointer" }}>
+          <BookmarkIcon />
+        </div>
+      </div>
+    </div>
   );
 };

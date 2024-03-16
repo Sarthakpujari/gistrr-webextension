@@ -12,3 +12,8 @@
   margin-top: 6px;
   cursor: pointer;
 }
+
+.floating-close-button {
+  position: absolute;
+  right: 21rem;
+}
