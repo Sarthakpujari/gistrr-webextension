@@ -16,7 +16,6 @@ const auth = getAuth(firebaseApp);
 setPersistence(auth, browserLocalPersistence);
 
 export function startAuth(interactive) {
-  console.log("Auth trying");
   chrome.identity.getAuthToken({ interactive: true }, function (token) {
     if (chrome.runtime.lastError && !interactive) {
       console.log("It was not possible to get a token programmatically.");
@@ -30,7 +29,7 @@ export function startAuth(interactive) {
           console.log(result);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
       console.error("The OAuth token was null");
@@ -39,14 +38,10 @@ export function startAuth(interactive) {
 }
 
 export function startSignIn() {
-  console.log("started SignIn");
   const user = auth.currentUser;
   if (user) {
-    console.log("current");
-    console.log(user);
     auth.signOut();
   } else {
-    console.log("proceed");
     startAuth(true);
   }
 }
@@ -54,13 +49,9 @@ export function startSignIn() {
 export const signin = async (req, res, storage) => {
   onAuthStateChanged(auth, async (user) => {
     if (user != null) {
-      console.log("logged in!");
-      console.log("current");
-      console.log(user);
       await storage.set("user", user);
       await res.send({ user });
     } else {
-      console.log("No user");
       startSignIn();
     }
   });
@@ -71,13 +62,16 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const storage = new Storage();
   const user = await storage.get("user");
   if (user) {
-    console.log("login not required");
     res.send({ user });
   } else {
     switch (action) {
-      case "login":
-        console.log("login required");
+      case "signin":
         signin(req, res, storage);
+        break;
+      case "signout":
+        auth.signOut();
+        await storage.remove("user");
+        res.send({ user: null });
         break;
       default:
         res.send("Invalid action!");

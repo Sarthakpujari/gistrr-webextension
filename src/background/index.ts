@@ -1,4 +1,4 @@
-import { signin } from "./messages/login";
+import { signin } from "./messages/auth";
 
 // @ts-ignore
 signin();

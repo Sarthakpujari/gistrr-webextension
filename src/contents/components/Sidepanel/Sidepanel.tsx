@@ -63,8 +63,8 @@ export const Sidepanel = ({
   const fetchUserFromBackground = async () => {
     try {
       await sendToBackground({
-        name: "login",
-        body: { action: "login" },
+        name: "auth",
+        body: { action: "signin" },
       });
       userDetailsFromStore();
     } catch (error) {
@@ -72,9 +72,28 @@ export const Sidepanel = ({
     }
   };
 
+  const logoutMessageToBackground = async () => {
+    console.log("logoutMessageToBackground");
+    try {
+      await sendToBackground({
+        name: "auth",
+        body: { action: "signout" },
+      });
+      setUserName("");
+      setUserEmail("");
+      setUserPhoto("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const loginStatus = () => {
     if (userName) {
-      return null;
+      return (
+        <Button colorScheme="blue" onClick={logoutMessageToBackground}>
+          Logout
+        </Button>
+      );
     } else {
       return (
         <Button colorScheme="blue" onClick={fetchUserFromBackground}>
@@ -97,13 +116,17 @@ export const Sidepanel = ({
           color="white"
           className="side-panel-header"
         >
-          {userPhoto && <img width={30} height={20} src={userPhoto} />}
-          Gistrr
-          <Box
-            className="more-icon"
-            onClick={() => setOpenBrainModal(!openBrainModal)}
-          >
-            <MoreIcon />
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Box>
+              {userPhoto && <img width={30} height={20} src={userPhoto} />}
+            </Box>
+            <Box>Gistrr</Box>
+            <Box
+              className="more-icon"
+              onClick={() => setOpenBrainModal(!openBrainModal)}
+            >
+              <MoreIcon />
+            </Box>
           </Box>
         </DrawerHeader>
         <DrawerBody>

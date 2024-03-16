@@ -18,6 +18,8 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState, type SetStateAction } from "react";
+import { validLink } from "~src/util/regex";
+
 import "./BookmarkInput.css";
 
 export const BookmarkInput = ({
@@ -27,6 +29,8 @@ export const BookmarkInput = ({
   openModal: boolean;
   setOpenModal: (value: SetStateAction<boolean>) => void;
 }) => {
+  const fileInputRef = useRef(null);
+
   const [title, setTitle] = useState<string>("");
   const [comments, setComments] = useState<string>("");
   const [url, setUrl] = useState<string>("");
@@ -34,15 +38,31 @@ export const BookmarkInput = ({
   const [brain, setBrain] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
 
-  const fileInputRef = useRef(null);
+  let copyEventListener;
+
+  useEffect(() => {
+    setEventListener();
+    setTitle(document.title);
+    setUrl(window.location.href);
+
+    () => {
+      document.removeEventListener("copy", copyEventListener);
+    };
+  }, []);
+
   const handleFileUploadClick = () => {
     fileInputRef.current.click();
   };
 
-  useEffect(() => {
-    setTitle(document.title);
-    setUrl(window.location.href);
-  }, []);
+  const setEventListener = () => {
+    copyEventListener = document.addEventListener("copy", (e) => {
+      e.preventDefault();
+      const text = window.getSelection().toString();
+      if (validLink(text)) {
+        setUrl(text);
+      }
+    });
+  };
 
   return (
     <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
@@ -106,7 +126,7 @@ export const BookmarkInput = ({
                             variant="outline"
                             onClick={handleFileUploadClick}
                           >
-                            Browse
+                            Upload
                           </Button>
                           <input
                             type="file"
@@ -130,7 +150,6 @@ export const BookmarkInput = ({
                 marginLeft="10px"
               />
             </Box>
-
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
                 Tags:
