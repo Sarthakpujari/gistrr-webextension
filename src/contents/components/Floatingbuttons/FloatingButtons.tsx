@@ -8,7 +8,7 @@ import { PanelIcon } from "../Icons/PanelIcon";
 
 export const FloatingButtons = ({
   setOpenDrawer,
-  setOpenModal,
+  setOpenBookmarkModal,
   hideFloatingButtons,
 }) => {
   if (hideFloatingButtons) return null;
@@ -19,7 +19,10 @@ export const FloatingButtons = ({
           <PanelIcon />
         </div>
         <hr className="floating-button-separator" />
-        <div onClick={() => setOpenModal(true)} style={{ cursor: "pointer" }}>
+        <div
+          onClick={() => setOpenBookmarkModal(true)}
+          style={{ cursor: "pointer" }}
+        >
           <BookmarkIcon />
         </div>
       </div>

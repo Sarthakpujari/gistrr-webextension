@@ -25,12 +25,17 @@ export const config: PlasmoCSConfig = {
 };
 
 const GoogleSidebar = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
   const [openChatWindow, setOpenChatWindow] = useState<boolean>(false);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    if (openBookmarkModal || openDrawer) setHideFloatingButtons(true);
+    else setHideFloatingButtons(false);
+  }, [openBookmarkModal, openDrawer]);
 
   const closeDrawerOpenChat = () => {
     setOpenDrawer(false);
@@ -44,14 +49,17 @@ const GoogleSidebar = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <BookmarkInput openModal={openModal} setOpenModal={setOpenModal} />
+      <BookmarkInput
+        openBookmarkModal={openBookmarkModal}
+        setOpenBookmarkModal={setOpenBookmarkModal}
+      />
       <CreateBrain
         openBrainModal={openBrainModal}
         setOpenBrainModal={setOpenBrainModal}
       />
       <FloatingButtons
         setOpenDrawer={setOpenDrawer}
-        setOpenModal={setOpenModal}
+        setOpenBookmarkModal={setOpenBookmarkModal}
         hideFloatingButtons={hideFloatingButtons}
       />
       <Sidepanel

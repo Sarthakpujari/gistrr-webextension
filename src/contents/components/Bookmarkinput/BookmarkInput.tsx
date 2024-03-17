@@ -23,11 +23,11 @@ import { validLink } from "~src/util/regex";
 import "./BookmarkInput.css";
 
 export const BookmarkInput = ({
-  openModal,
-  setOpenModal,
+  openBookmarkModal,
+  setOpenBookmarkModal,
 }: {
-  openModal: boolean;
-  setOpenModal: (value: SetStateAction<boolean>) => void;
+  openBookmarkModal: boolean;
+  setOpenBookmarkModal: (value: SetStateAction<boolean>) => void;
 }) => {
   const fileInputRef = useRef(null);
 
@@ -65,7 +65,10 @@ export const BookmarkInput = ({
   };
 
   return (
-    <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
+    <Modal
+      isOpen={openBookmarkModal}
+      onClose={() => setOpenBookmarkModal(false)}
+    >
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
