@@ -7,7 +7,7 @@ export const createUser = async (params: {
   name: string;
   profileImageUrl: string;
   password: string;
-}): Promise<{ id: number }> => {
+}): Promise<{ id: string }> => {
   const payload = {
     email: params.email,
     name: params.name,
@@ -19,6 +19,33 @@ export const createUser = async (params: {
   try {
     const res = await axios.post(`${proxyUrl}/insertuser`, payload);
     return new Promise((resolve) => resolve(res.data.insert_user_one));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
+
+export const createBrain = async (params: {
+  name: string;
+}): Promise<{ id: string }> => {
+  try {
+    const res = await axios.post(`${proxyUrl}/insertbrain`, params);
+    return new Promise((resolve) => resolve(res.data.insert_brain_one));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
+
+export const insertUserBrain = async (params: {
+  userId: string;
+  brainId: string;
+}): Promise<{ id: number }> => {
+  const payload = {
+    user_id: params.userId,
+    brain_id: params.brainId,
+  };
+  try {
+    const res = await axios.post(`${proxyUrl}/insertuserbrain`, payload);
+    return new Promise((resolve) => resolve(res.data.insert_user_brain_one));
   } catch (error) {
     console.error("Error posting data:", error);
   }
