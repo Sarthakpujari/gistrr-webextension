@@ -17,6 +17,7 @@ import {
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
+import { createUser } from "~src/util/Api";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
@@ -38,6 +39,7 @@ export const Sidepanel = ({
   setOpenBrainModal: Dispatch<SetStateAction<boolean>>;
   closeDrawerOpenChat: () => void;
 }) => {
+  const storage = new Storage();
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [userName, setUserName] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
@@ -47,33 +49,49 @@ export const Sidepanel = ({
     userDetailsFromStore();
   }, []);
 
+  const setStates = (email: string, displayName: string, photoURL: string) => {
+    setUserEmail(email);
+    setUserName(displayName);
+    setUserPhoto(photoURL);
+  };
+
   const userDetailsFromStore = async () => {
-    const storage = new Storage();
     const user: { email: string; displayName: string; photoURL: string } =
       await storage.get("user");
-
     if (user) {
       const { email, displayName, photoURL } = user;
-      setUserEmail(email);
-      setUserName(displayName);
-      setUserPhoto(photoURL);
+      setStates(email, displayName, photoURL);
     }
   };
 
   const fetchUserFromBackground = async () => {
     try {
-      await sendToBackground({
+      const responseFromBackground = await sendToBackground({
         name: "auth",
         body: { action: "signin" },
       });
-      userDetailsFromStore();
+
+      const {
+        presentOnStorage,
+        user: { email, displayName, photoURL },
+      } = responseFromBackground;
+
+      if (!presentOnStorage) {
+        const { id } = await createUser({
+          email,
+          name: displayName,
+          profileImageUrl: photoURL,
+          password: "1234", // working only with "1234", tried with "dummy" didn't work
+        });
+        storage.set("userId", id);
+      }
+      setStates(email, displayName, photoURL);
     } catch (error) {
       console.log(error);
     }
   };
 
   const logoutMessageToBackground = async () => {
-    console.log("logoutMessageToBackground");
     try {
       await sendToBackground({
         name: "auth",
@@ -82,6 +100,7 @@ export const Sidepanel = ({
       setUserName("");
       setUserEmail("");
       setUserPhoto("");
+      storage.remove("userId");
     } catch (error) {
       console.log(error);
     }

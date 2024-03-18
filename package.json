@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
+    "axios": "^1.6.8",
     "firebase": "^10.8.1",
     "framer-motion": "^11.0.8",
     "plasmo": "^0.85.0",
@@ -34,7 +35,8 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "http://*/*"
     ],
     "permissions": [
       "tabs",

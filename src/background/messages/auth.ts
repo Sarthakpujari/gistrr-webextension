@@ -50,7 +50,7 @@ export const signin = async (req, res, storage) => {
   onAuthStateChanged(auth, async (user) => {
     if (user != null) {
       await storage.set("user", user);
-      await res.send({ user });
+      await res.send({ user, presentOnStorage: false });
     } else {
       startSignIn();
     }
@@ -62,7 +62,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const storage = new Storage();
   const user = await storage.get("user");
   if (user) {
-    res.send({ user });
+    res.send({ user, presentOnStorage: true });
   } else {
     switch (action) {
       case "signin":
