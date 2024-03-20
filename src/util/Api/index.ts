@@ -50,3 +50,24 @@ export const insertUserBrain = async (params: {
     console.error("Error posting data:", error);
   }
 };
+
+export const getUserBrains = async (userId): Promise<any> => {
+  const payload = { user_id: userId };
+  try {
+    const res = await axios.post(`${proxyUrl}/getuserbrain`, payload);
+    return new Promise((resolve) => resolve(res.data.user_by_pk.user_brains));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
+
+export const getUser = async (params: {
+  email: string;
+}): Promise<{ id: string }> => {
+  try {
+    const res = await axios.post(`${proxyUrl}/getuserid`, params);
+    return new Promise((resolve) => resolve(res.data.user[0]));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};

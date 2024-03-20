@@ -1,1 +1,1 @@
-export * from "./Chatpanel";
+export * from "./Brainpanel";

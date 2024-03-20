@@ -17,7 +17,7 @@ import {
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import { createUser } from "~src/util/Api";
+import { createUser, getUser } from "~src/util/Api";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
@@ -76,7 +76,10 @@ export const Sidepanel = ({
         user: { email, displayName, photoURL },
       } = responseFromBackground;
 
-      if (!presentOnStorage) {
+      if (presentOnStorage) {
+        const { id } = await getUser({ email });
+        storage.set("userId", id);
+      } else {
         const { id } = await createUser({
           email,
           name: displayName,
