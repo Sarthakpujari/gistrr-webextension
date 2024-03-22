@@ -6,13 +6,14 @@ import { Sidepanel } from "./components/Sidepanel/Sidepanel";
 import { FloatingButtons } from "./components/Floatingbuttons";
 import { theme } from "./chakraThemeExtend";
 import { CreateBrain } from "./components/CreateBrain";
+import { Chatwindow } from "./components/Chatwindow";
 
 import type { PlasmoCSConfig } from "plasmo";
 
 import "./GistrrContentScript.css";
-
 import cssText from "data-text:~/contents/GistrrContentScript.css";
-import { Chatwindow } from "./components/Chatwindow";
+import { Storage } from "@plasmohq/storage";
+import { getUserBrains } from "~src/util/Api";
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -31,11 +32,29 @@ const GoogleSidebar = () => {
   const [openChatWindow, setOpenChatWindow] = useState<boolean>(false);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
+  const storage = new Storage();
+  const [brainList, setBrainList] = useState<any[]>([]);
 
   useEffect(() => {
     if (openBookmarkModal || openDrawer) setHideFloatingButtons(true);
     else setHideFloatingButtons(false);
   }, [openBookmarkModal, openDrawer]);
+
+  useEffect(() => {
+    getBrainList();
+  }, []);
+
+  const getBrainList = async () => {
+    const userId = await storage.get("userId");
+    console.log("userID >>> ", userId);
+    if (!userId) {
+      console.error("User not found");
+      return;
+    } else {
+      const brainListFromUser = await getUserBrains(userId);
+      setBrainList(brainListFromUser);
+    }
+  };
 
   const closeDrawerOpenChat = () => {
     setOpenDrawer(false);
@@ -52,6 +71,7 @@ const GoogleSidebar = () => {
       <BookmarkInput
         openBookmarkModal={openBookmarkModal}
         setOpenBookmarkModal={setOpenBookmarkModal}
+        brainList={brainList}
       />
       <CreateBrain
         openBrainModal={openBrainModal}
@@ -68,6 +88,7 @@ const GoogleSidebar = () => {
         openBrainModal={openBrainModal}
         setOpenBrainModal={setOpenBrainModal}
         closeDrawerOpenChat={closeDrawerOpenChat}
+        brainList={brainList}
       />
       <Chatwindow
         openChatWindow={openChatWindow}

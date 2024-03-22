@@ -11,32 +11,30 @@ import {
   Text,
   Box,
   Textarea,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
 } from "@chakra-ui/react";
+import { Select } from "chakra-react-select";
 import { useEffect, useRef, useState, type SetStateAction } from "react";
 import { validLink } from "~src/util/regex";
 
-import "./BookmarkInput.css";
+import "./BookmarkInput.scss";
+import { Storage } from "@plasmohq/storage";
+import { createBookmark, insertBrainBookmark } from "~src/util/Api";
 
 export const BookmarkInput = ({
   openBookmarkModal,
   setOpenBookmarkModal,
+  brainList,
 }: {
   openBookmarkModal: boolean;
   setOpenBookmarkModal: (value: SetStateAction<boolean>) => void;
+  brainList: any[];
 }) => {
   const fileInputRef = useRef(null);
 
   const [title, setTitle] = useState<string>("");
   const [comments, setComments] = useState<string>("");
   const [url, setUrl] = useState<string>("");
-  const [tags, setTags] = useState<string>("");
-  const [brain, setBrain] = useState<string>("");
-  const [fileName, setFileName] = useState<string>("");
+  const storage = new Storage();
 
   let copyEventListener;
 
@@ -64,6 +62,29 @@ export const BookmarkInput = ({
     });
   };
 
+  const handleSaveBookMark = async () => {
+    const userId = await storage.get("userId");
+    console.log("userId >>> ", userId);
+    if (userId) {
+      const { id } = await createBookmark({
+        title,
+        url,
+        note_url: "abcd",
+        note: "abcd",
+        owner_id: userId,
+        tags: "tags",
+      });
+      // insert brain bookmark
+      const { id: insertBrainBookmarkId } = await insertBrainBookmark({
+        brainId: "21d984f5-c5f5-4447-8a6e-3cfc2291afff",
+        bookmarkId: id,
+      });
+      console.log("Success! >>> ", insertBrainBookmarkId);
+    } else {
+      console.error("User not found");
+    }
+  };
+
   return (
     <Modal
       isOpen={openBookmarkModal}
@@ -78,70 +99,24 @@ export const BookmarkInput = ({
         <ModalCloseButton />
         <ModalBody>
           <Box className="bookmark-input">
-            <Box>
-              <Tabs variant="soft-rounded" colorScheme="green">
-                <TabList>
-                  <Tab>Links</Tab>
-                  <Tab>Documents</Tab>
-                  <Tab>Notes</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel paddingLeft={0} paddingRight={0}>
-                    <Box className="input_container">
-                      <Text mb="12px" marginTop={2}>
-                        URL:
-                      </Text>
-                      <Input
-                        placeholder="Enter bookmark URL"
-                        value={url}
-                        marginLeft="10px"
-                      />
-                    </Box>
-                  </TabPanel>
-                  <TabPanel paddingLeft={0} paddingRight={0}>
-                    <Box className="input_container_textarea">
-                      <Text mb="12px" marginTop={2}>
-                        Notes:
-                      </Text>
-                      <Textarea
-                        placeholder="Enter your comments here"
-                        value={comments}
-                      />
-                    </Box>
-                  </TabPanel>
-                  <TabPanel paddingLeft={0} paddingRight={0}>
-                    <Box className="input_container">
-                      <Text mb="12px" marginTop={2}>
-                        Upload:
-                      </Text>
-                      <Box className="upload_field">
-                        <Box>
-                          <Input
-                            value={fileName}
-                            marginLeft="5px"
-                            placeholder="Supported files .jpg .png .doc .docx .pdf"
-                          />
-                        </Box>
-                        <Box>
-                          <Button
-                            colorScheme="blue"
-                            size="sm"
-                            variant="outline"
-                            onClick={handleFileUploadClick}
-                          >
-                            Upload
-                          </Button>
-                          <input
-                            type="file"
-                            ref={fileInputRef}
-                            style={{ display: "none" }}
-                          />
-                        </Box>
-                      </Box>
-                    </Box>
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
+            <Box className="input_container">
+              <Text mb="12px" marginTop={2}>
+                URL:
+              </Text>
+              <Input
+                placeholder="Enter bookmark URL"
+                value={url}
+                marginLeft="10px"
+              />
+            </Box>
+            <Box className="input_container_textarea">
+              <Text mb="12px" marginTop={2}>
+                Notes:
+              </Text>
+              <Textarea
+                placeholder="Enter your comments here"
+                value={comments}
+              />
             </Box>
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
@@ -163,20 +138,20 @@ export const BookmarkInput = ({
               <Text mb="12px" marginTop={2}>
                 Brain:
               </Text>
-              <Input
-                placeholder="Enter name of your Brain"
-                value={brain}
-                marginLeft="5px"
-              />
+              <Box width="100%">
+                <Select
+                  size="lg"
+                  options={[
+                    { value: "1", label: "Brain 1" },
+                    { value: "2", label: "Brain 2" },
+                  ]}
+                />
+              </Box>
             </Box>
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button
-            colorScheme="green"
-            mr={3}
-            onClick={() => console.log("Bookmark saved")}
-          >
+          <Button colorScheme="green" mr={3} onClick={handleSaveBookMark}>
             Save
           </Button>
         </ModalFooter>

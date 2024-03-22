@@ -32,12 +32,14 @@ export const Sidepanel = ({
   setOpenDrawer,
   setOpenBrainModal,
   closeDrawerOpenChat,
+  brainList,
 }: {
   openDrawer: boolean;
   openBrainModal: boolean;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
   setOpenBrainModal: Dispatch<SetStateAction<boolean>>;
   closeDrawerOpenChat: () => void;
+  brainList: any[];
 }) => {
   const storage = new Storage();
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -79,6 +81,7 @@ export const Sidepanel = ({
       if (presentOnStorage) {
         const { id } = await getUser({ email });
         storage.set("userId", id);
+        console.log("id >>> ", id);
       } else {
         const { id } = await createUser({
           email,
@@ -87,6 +90,7 @@ export const Sidepanel = ({
           password: "1234", // working only with "1234", tried with "dummy" didn't work
         });
         storage.set("userId", id);
+        console.log("id >>> ", id);
       }
       setStates(email, displayName, photoURL);
     } catch (error) {
@@ -179,7 +183,10 @@ export const Sidepanel = ({
             <TabPanels>
               <TabPanel paddingLeft={0} paddingRight={0}>
                 <SearchBar />
-                <ChatPanel closeDrawerOpenChat={closeDrawerOpenChat} />
+                <ChatPanel
+                  closeDrawerOpenChat={closeDrawerOpenChat}
+                  brainList={brainList}
+                />
               </TabPanel>
               <TabPanel paddingLeft={0} paddingRight={0}>
                 <SearchBar />

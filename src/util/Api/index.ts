@@ -71,3 +71,34 @@ export const getUser = async (params: {
     console.error("Error posting data:", error);
   }
 };
+
+export const createBookmark = async (params: {
+  title: string;
+  url: string;
+  note: string;
+  owner_id;
+  note_url: string;
+  tags: string;
+}): Promise<{ id: string }> => {
+  console.log("params");
+  try {
+    const res = await axios.post(`${proxyUrl}/insertbookmark`, params);
+    return new Promise((resolve) => resolve(res.data.insert_bookmark_one));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
+
+export const insertBrainBookmark = async (params: {
+  brainId: string;
+  bookmarkId: string;
+}): Promise<{ id: string }> => {
+  try {
+    const res = await axios.post(`${proxyUrl}/insertbrainbookmark`, params);
+    return new Promise((resolve) =>
+      resolve(res.data.insert_brain_bookmark_one)
+    );
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
