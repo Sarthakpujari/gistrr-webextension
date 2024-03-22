@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+import { Storage } from "@plasmohq/storage";
 
 import { BookmarkInput } from "./components/Bookmarkinput";
 import { Sidepanel } from "./components/Sidepanel/Sidepanel";
@@ -7,13 +8,12 @@ import { FloatingButtons } from "./components/Floatingbuttons";
 import { theme } from "./chakraThemeExtend";
 import { CreateBrain } from "./components/CreateBrain";
 import { Chatwindow } from "./components/Chatwindow";
+import { getUserBrains } from "~src/util/Api";
 
 import type { PlasmoCSConfig } from "plasmo";
 
 import "./GistrrContentScript.css";
 import cssText from "data-text:~/contents/GistrrContentScript.css";
-import { Storage } from "@plasmohq/storage";
-import { getUserBrains } from "~src/util/Api";
 
 export const getStyle = () => {
   const style = document.createElement("style");
