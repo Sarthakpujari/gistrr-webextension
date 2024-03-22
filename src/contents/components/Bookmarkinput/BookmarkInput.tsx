@@ -11,9 +11,10 @@ import {
   Text,
   Box,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
-import { useEffect, useRef, useState, type SetStateAction } from "react";
+import { useEffect, useState, type SetStateAction } from "react";
 import { validLink } from "~src/util/regex";
 
 import "./BookmarkInput.scss";
@@ -30,6 +31,7 @@ export const BookmarkInput = ({
   brainList: any[];
 }) => {
   const storage = new Storage();
+  const toast = useToast();
   const [title, setTitle] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [url, setUrl] = useState<string>("");
@@ -47,6 +49,10 @@ export const BookmarkInput = ({
     };
   }, []);
 
+  const handleCloseModal = () => {
+    setOpenBookmarkModal(false);
+  };
+
   const setEventListener = () => {
     copyEventListener = document.addEventListener("copy", (e) => {
       e.preventDefault();
@@ -61,29 +67,40 @@ export const BookmarkInput = ({
     const userId = await storage.get("userId");
     console.log("userId >>> ", userId);
     if (userId) {
-      const { id } = await createBookmark({
-        title,
-        url,
-        noteUrl: "abcd",
-        note: notes,
-        ownerId: userId,
-      });
-      console.log("bookmark id >>> ", id);
-      const { id: insertBrainBookmarkId } = await insertBrainBookmark({
-        brainId,
-        bookmarkId: id,
-      });
-      console.log("Success! >>> ", insertBrainBookmarkId);
+      try {
+        const { id } = await createBookmark({
+          title,
+          url,
+          noteUrl: "abcd",
+          note: notes,
+          ownerId: userId,
+        });
+        const { id: insertBrainBookmarkId } = await insertBrainBookmark({
+          brainId,
+          bookmarkId: id,
+        });
+        console.log(
+          "Success! insertBrainBookmarkId >>> ",
+          insertBrainBookmarkId
+        );
+        handleCloseModal();
+        return toast({
+          title: "Bookmark saved successfully",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: "top",
+        });
+      } catch (error) {
+        console.error("BookmarkInput.tsx >>> ", error);
+      }
     } else {
       console.error("User not found");
     }
   };
 
   return (
-    <Modal
-      isOpen={openBookmarkModal}
-      onClose={() => setOpenBookmarkModal(false)}
-    >
+    <Modal isOpen={openBookmarkModal} onClose={handleCloseModal}>
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
