@@ -76,13 +76,18 @@ export const createBookmark = async (params: {
   title: string;
   url: string;
   note: string;
-  owner_id;
-  note_url: string;
-  tags: string;
+  ownerId;
+  noteUrl: string;
 }): Promise<{ id: string }> => {
-  console.log("params");
+  const payload = {
+    title: params.title,
+    url: params.url,
+    note: params.note,
+    owner_id: params.ownerId,
+    note_url: params.noteUrl,
+  };
   try {
-    const res = await axios.post(`${proxyUrl}/insertbookmark`, params);
+    const res = await axios.post(`${proxyUrl}/insertbookmark`, payload);
     return new Promise((resolve) => resolve(res.data.insert_bookmark_one));
   } catch (error) {
     console.error("Error posting data:", error);
@@ -93,8 +98,12 @@ export const insertBrainBookmark = async (params: {
   brainId: string;
   bookmarkId: string;
 }): Promise<{ id: string }> => {
+  const payload = {
+    brain_id: params.brainId,
+    bookmark_id: params.bookmarkId,
+  };
   try {
-    const res = await axios.post(`${proxyUrl}/insertbrainbookmark`, params);
+    const res = await axios.post(`${proxyUrl}/insertbrainbookmark`, payload);
     return new Promise((resolve) =>
       resolve(res.data.insert_brain_bookmark_one)
     );

@@ -29,12 +29,11 @@ export const BookmarkInput = ({
   setOpenBookmarkModal: (value: SetStateAction<boolean>) => void;
   brainList: any[];
 }) => {
-  const fileInputRef = useRef(null);
-
-  const [title, setTitle] = useState<string>("");
-  const [comments, setComments] = useState<string>("");
-  const [url, setUrl] = useState<string>("");
   const storage = new Storage();
+  const [title, setTitle] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
+  const [url, setUrl] = useState<string>("");
+  const [brainId, setBrainId] = useState<string>("");
 
   let copyEventListener;
 
@@ -47,10 +46,6 @@ export const BookmarkInput = ({
       document.removeEventListener("copy", copyEventListener);
     };
   }, []);
-
-  const handleFileUploadClick = () => {
-    fileInputRef.current.click();
-  };
 
   const setEventListener = () => {
     copyEventListener = document.addEventListener("copy", (e) => {
@@ -69,14 +64,13 @@ export const BookmarkInput = ({
       const { id } = await createBookmark({
         title,
         url,
-        note_url: "abcd",
-        note: "abcd",
-        owner_id: userId,
-        tags: "tags",
+        noteUrl: "abcd",
+        note: notes,
+        ownerId: userId,
       });
-      // insert brain bookmark
+      console.log("bookmark id >>> ", id);
       const { id: insertBrainBookmarkId } = await insertBrainBookmark({
-        brainId: "21d984f5-c5f5-4447-8a6e-3cfc2291afff",
+        brainId,
         bookmarkId: id,
       });
       console.log("Success! >>> ", insertBrainBookmarkId);
@@ -107,6 +101,7 @@ export const BookmarkInput = ({
                 placeholder="Enter bookmark URL"
                 value={url}
                 marginLeft="10px"
+                onChange={(e) => setUrl(e.target.value)}
               />
             </Box>
             <Box className="input_container_textarea">
@@ -114,8 +109,9 @@ export const BookmarkInput = ({
                 Notes:
               </Text>
               <Textarea
-                placeholder="Enter your comments here"
-                value={comments}
+                placeholder="Enter your notes here"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
               />
             </Box>
             <Box className="input_container">
@@ -126,13 +122,8 @@ export const BookmarkInput = ({
                 placeholder="Enter Title"
                 value={title}
                 marginLeft="10px"
+                onChange={(e) => setTitle(e.target.value)}
               />
-            </Box>
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                Tags:
-              </Text>
-              <Input placeholder="Enter Tags" marginLeft="7px" />
             </Box>
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
@@ -141,10 +132,13 @@ export const BookmarkInput = ({
               <Box width="100%">
                 <Select
                   size="lg"
-                  options={[
-                    { value: "1", label: "Brain 1" },
-                    { value: "2", label: "Brain 2" },
-                  ]}
+                  options={brainList?.map((item) => {
+                    const { Name, id } = item.brain;
+                    return { value: id, label: Name };
+                  })}
+                  onChange={(selectedOption) => {
+                    setBrainId(selectedOption.value);
+                  }}
                 />
               </Box>
             </Box>
