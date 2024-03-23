@@ -1,16 +1,23 @@
 import { Box } from "@chakra-ui/react";
+import { Storage } from "@plasmohq/storage";
 
 export const SingleBrain = ({
   brain,
   closeDrawerOpenChat,
+  brainId,
 }: {
   brain: any;
   closeDrawerOpenChat: () => void;
+  brainId: string;
 }) => {
+  const storage = new Storage();
   return (
     <Box
       className="single-chat-container"
-      onClick={() => closeDrawerOpenChat()}
+      onClick={async () => {
+        await storage.set("activeBrainId", brainId);
+        closeDrawerOpenChat();
+      }}
     >
       <Box className="image-contianer"></Box>
       <Box className="details-container">

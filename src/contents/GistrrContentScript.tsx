@@ -36,7 +36,8 @@ const GoogleSidebar = () => {
   const [brainList, setBrainList] = useState<any[]>([]);
 
   useEffect(() => {
-    if (openBookmarkModal || openDrawer) setHideFloatingButtons(true);
+    if (openBookmarkModal || openDrawer || openChatWindow)
+      setHideFloatingButtons(true);
     else setHideFloatingButtons(false);
   }, [openBookmarkModal, openDrawer]);
 
@@ -57,7 +58,6 @@ const GoogleSidebar = () => {
   };
 
   const closeDrawerOpenChat = () => {
-    setOpenDrawer(false);
     setOpenChatWindow(true);
   };
 
@@ -90,10 +90,12 @@ const GoogleSidebar = () => {
         closeDrawerOpenChat={closeDrawerOpenChat}
         brainList={brainList}
       />
-      <Chatwindow
-        openChatWindow={openChatWindow}
-        closeChatOpenDrawer={closeChatOpenDrawer}
-      />
+      {openChatWindow && (
+        <Chatwindow
+          openChatWindow={openChatWindow}
+          closeChatOpenDrawer={closeChatOpenDrawer}
+        />
+      )}
     </ChakraProvider>
   );
 };

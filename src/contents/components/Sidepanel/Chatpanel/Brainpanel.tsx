@@ -16,6 +16,8 @@ export const ChatPanel = ({
       {brainList?.map((brain) => {
         return (
           <SingleBrain
+            brainId={brain.brain.id}
+            key={brain.brain.id}
             brain={brain.brain}
             closeDrawerOpenChat={closeDrawerOpenChat}
           />

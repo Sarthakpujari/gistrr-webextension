@@ -2,6 +2,8 @@ import axios from "axios";
 
 const proxyUrl = "http://localhost:8000/data-proxy";
 
+export * from "./chat";
+
 export const createUser = async (params: {
   email: string;
   name: string;
