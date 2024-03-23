@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -7,12 +8,14 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Chatwindow.css";
-import { chat } from "~src/util/Api";
+import { chat as sendToLLM } from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
 
 export const Chatwindow = ({
@@ -22,27 +25,34 @@ export const Chatwindow = ({
   openChatWindow: boolean;
   closeChatOpenDrawer: () => void;
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const [chat, setChat] = useState<{ sender: string; text: string }[]>([]);
+
   const handleClose = () => {
     closeChatOpenDrawer();
   };
   const storage = new Storage();
 
-  useEffect(() => {
-    handleChat();
-  }, []);
+  const pushToChat = (msgToLoad, sender) => {
+    setChat((prevChat) => [...prevChat, { sender, text: msgToLoad }]);
+  };
 
-  const handleChat = async () => {
+  const handleChat = async (e) => {
+    pushToChat(message, "User");
+    setMessage("");
     const currentBrain = await storage.get("activeBrainId");
     const userId = await storage.get("userId");
-    console.log("currentBrain >>> ", currentBrain);
-    console.log("userId >>> ", userId);
     if (userId && currentBrain !== "") {
-      const response = await chat({
+      setLoading(true);
+      const response = await sendToLLM({
         userId: userId,
         brainId: "a9dad190-9706-4977-b342-18331e0fe61f",
-        query: "Who are you?",
+        query: message,
       });
-      console.log("response >>> ", response);
+      const messageFromLLM = response.response;
+      setLoading(false);
+      pushToChat(messageFromLLM, "Bot");
     }
   };
 
@@ -60,9 +70,31 @@ export const Chatwindow = ({
           </Box>
           Chat Window
         </DrawerHeader>
-        <DrawerBody>Hello Chat Window</DrawerBody>
+        <DrawerBody>
+          <br />
+          <Box>
+            {chat.map((msg, index) => (
+              <div key={index}>
+                <strong>{msg.sender}:</strong> {msg.text}
+              </div>
+            ))}
+          </Box>
+          <Box>{loading && "Loading..."}</Box>
+        </DrawerBody>
         <DrawerFooter>
-          <Input />
+          <InputGroup>
+            <Input
+              type="text"
+              placeholder="Type your message here..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleChat}>
+                Send
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
