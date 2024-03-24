@@ -17,7 +17,13 @@ import {
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import { createUser, getUser } from "~src/util/Api";
+import {
+  createBrain,
+  createIndex,
+  createUser,
+  getUser,
+  insertUserBrain,
+} from "~src/util/Api";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
@@ -83,14 +89,22 @@ export const Sidepanel = ({
         storage.set("userId", id);
         console.log("id >>> ", id);
       } else {
-        const { id } = await createUser({
+        const { id: userId } = await createUser({
           email,
           name: displayName,
           profileImageUrl: photoURL,
           password: "1234", // working only with "1234", tried with "dummy" didn't work
         });
-        storage.set("userId", id);
-        console.log("id >>> ", id);
+        const { id: defaultBrainId } = await createBrain({ name: "default" });
+        const { id: insertUserBrainId } = await insertUserBrain({
+          userId,
+          brainId: defaultBrainId,
+        });
+        const response = await createIndex({
+          userId,
+          brainId: defaultBrainId,
+        });
+        storage.set("userId", userId);
       }
       setStates(email, displayName, photoURL);
     } catch (error) {

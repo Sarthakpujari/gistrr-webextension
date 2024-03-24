@@ -1,6 +1,7 @@
 import axios from "axios";
+import { backendUrl } from "./chat";
 
-const proxyUrl = "http://localhost:8000/data-proxy";
+const proxyUrl = `${backendUrl}/data-proxy`;
 
 export * from "./chat";
 
@@ -109,6 +110,30 @@ export const insertBrainBookmark = async (params: {
     return new Promise((resolve) =>
       resolve(res.data.insert_brain_bookmark_one)
     );
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
+
+export const insertChat = async (params: {
+  receiverUserId: string;
+  senderUserId: string;
+  text: string;
+  url: string;
+  responseSourceUrl: string;
+  chatType: "user" | "system" | "notif";
+}): Promise<{ id: string }> => {
+  const payload = {
+    receiver_user_id: params.receiverUserId,
+    sender_user_id: params.senderUserId,
+    text: params.text,
+    url: params.url,
+    response_source_url: params.responseSourceUrl,
+    chat_type: params.chatType,
+  };
+  try {
+    const res = await axios.post(`${proxyUrl}/insertchat`, payload);
+    return new Promise((resolve) => resolve(res.data.insert_chat_one));
   } catch (error) {
     console.error("Error posting data:", error);
   }

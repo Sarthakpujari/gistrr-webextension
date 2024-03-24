@@ -12,47 +12,70 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import React, { useEffect, useState } from "react";
-
-import "./Chatwindow.css";
-import { chat as sendToLLM } from "~src/util/Api";
+import React, { useState } from "react";
+import {
+  chat as sendToLLM,
+  insertChat as insertChatToAPI,
+} from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
 
+import "./Chatwindow.css";
+
 export const Chatwindow = ({
-  openChatWindow,
   closeChatOpenDrawer,
 }: {
-  openChatWindow: boolean;
   closeChatOpenDrawer: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [chat, setChat] = useState<{ sender: string; text: string }[]>([]);
+  const storage = new Storage();
 
   const handleClose = () => {
     closeChatOpenDrawer();
   };
-  const storage = new Storage();
 
   const pushToChat = (msgToLoad, sender) => {
     setChat((prevChat) => [...prevChat, { sender, text: msgToLoad }]);
   };
 
-  const handleChat = async (e) => {
-    pushToChat(message, "User");
-    setMessage("");
+  const insertChat = async (params) => {
+    const { id: insertChatId } = await insertChatToAPI(params);
+    console.log("Chat inserted with id >>> ", insertChatId);
+  };
+
+  const handleChat = async () => {
+    console.log("message >>> ", message);
     const currentBrain = await storage.get("activeBrainId");
     const userId = await storage.get("userId");
-    if (userId && currentBrain !== "") {
+
+    if (userId && currentBrain !== "" && message !== "") {
+      pushToChat(message, "User");
+      setMessage("");
       setLoading(true);
-      const response = await sendToLLM({
+      await insertChat({
+        receiverUserId: currentBrain,
+        senderUserId: userId,
+        text: message,
+        url: "",
+        responseSourceUrl: [],
+        chatType: "user",
+      });
+      const messageFromLLM = await sendToLLM({
         userId: userId,
-        brainId: "a9dad190-9706-4977-b342-18331e0fe61f",
+        brainId: currentBrain,
         query: message,
       });
-      const messageFromLLM = response.response;
       setLoading(false);
       pushToChat(messageFromLLM, "Bot");
+      await insertChat({
+        receiverUserId: userId,
+        senderUserId: currentBrain,
+        text: messageFromLLM,
+        url: "",
+        responseSourceUrl: [],
+        chatType: "system",
+      });
     }
   };
 
