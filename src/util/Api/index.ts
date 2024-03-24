@@ -138,3 +138,28 @@ export const insertChat = async (params: {
     console.error("Error posting data:", error);
   }
 };
+
+export const getBrainChat = async ({
+  receiverUserId,
+  senderUserId,
+  lastCursor,
+  pageSize,
+}: {
+  receiverUserId: string;
+  senderUserId: string;
+  lastCursor: number;
+  pageSize: number;
+}): Promise<any> => {
+  const payload = {
+    receiver_user_id: receiverUserId,
+    sender_user_id: senderUserId,
+    last_cursor: lastCursor,
+    page_size: pageSize,
+  };
+  try {
+    const res = await axios.post(`${proxyUrl}/getbrainchat`, payload);
+    return new Promise((resolve) => resolve(res.data.chat));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};

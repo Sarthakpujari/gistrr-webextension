@@ -12,10 +12,11 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   chat as sendToLLM,
   insertChat as insertChatToAPI,
+  getBrainChat as getBrainChatFromAPI,
 } from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
 
@@ -31,21 +32,40 @@ export const Chatwindow = ({
   const [chat, setChat] = useState<{ sender: string; text: string }[]>([]);
   const storage = new Storage();
 
-  const handleClose = () => {
-    closeChatOpenDrawer();
+  useEffect(() => {
+    getBrainChat();
+  }, []);
+
+  const getBrainChat = async () => {
+    const currentBrain = await storage.get("activeBrainId");
+    const userId = await storage.get("userId");
+
+    if (userId && currentBrain !== "") {
+      const chatData = await getBrainChatFromAPI({
+        receiverUserId: userId,
+        senderUserId: currentBrain,
+        lastCursor: 10000,
+        pageSize: 100,
+      });
+      console.log("chatData >>> ", chatData);
+      const chatDataFormatted = chatData.map((chatItem) => {
+        return {
+          sender: chatItem.chat_type === "user" ? "User" : "Bot",
+          text: chatItem.text,
+        };
+      });
+      setChat(chatDataFormatted);
+    }
   };
 
-  const pushToChat = (msgToLoad, sender) => {
+  const handleClose = () => closeChatOpenDrawer();
+
+  const pushToChat = (msgToLoad, sender) =>
     setChat((prevChat) => [...prevChat, { sender, text: msgToLoad }]);
-  };
 
-  const insertChat = async (params) => {
-    const { id: insertChatId } = await insertChatToAPI(params);
-    console.log("Chat inserted with id >>> ", insertChatId);
-  };
+  const insertChat = async (params) => await insertChatToAPI(params);
 
   const handleChat = async () => {
-    console.log("message >>> ", message);
     const currentBrain = await storage.get("activeBrainId");
     const userId = await storage.get("userId");
 
@@ -94,14 +114,15 @@ export const Chatwindow = ({
           Chat Window
         </DrawerHeader>
         <DrawerBody>
-          <br />
-          <Box>
-            {chat.map((msg, index) => (
-              <div key={index}>
-                <strong>{msg.sender}:</strong> {msg.text}
-              </div>
-            ))}
-          </Box>
+          <div>
+            <div>
+              {chat.map((msg, index) => (
+                <div key={index}>
+                  <strong>{msg.sender}:</strong> {msg.text}
+                </div>
+              ))}
+            </div>
+          </div>
           <Box>{loading && "Loading..."}</Box>
         </DrawerBody>
         <DrawerFooter>
