@@ -58,6 +58,7 @@ const GoogleSidebar = () => {
   };
 
   const closeDrawerOpenChat = () => {
+    setOpenDrawer(false);
     setOpenChatWindow(true);
   };
 
@@ -91,10 +92,7 @@ const GoogleSidebar = () => {
         brainList={brainList}
       />
       {openChatWindow && (
-        <Chatwindow
-          openChatWindow={openChatWindow}
-          closeChatOpenDrawer={closeChatOpenDrawer}
-        />
+        <Chatwindow closeChatOpenDrawer={closeChatOpenDrawer} />
       )}
     </ChakraProvider>
   );

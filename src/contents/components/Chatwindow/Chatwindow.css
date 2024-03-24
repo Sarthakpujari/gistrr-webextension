@@ -1,9 +1,0 @@
-.chat-window-header {
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.chat-window-header-icon {
-  cursor: pointer;
-}

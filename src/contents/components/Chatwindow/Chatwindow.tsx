@@ -11,16 +11,18 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import moment from "moment";
 import { ArrowLeftIcon } from "@chakra-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Storage } from "@plasmohq/storage";
 import {
   chat as sendToLLM,
   insertChat as insertChatToAPI,
   getBrainChat as getBrainChatFromAPI,
 } from "~src/util/Api";
-import { Storage } from "@plasmohq/storage";
+import { formatLocalTime } from "~src/util/time_format";
 
-import "./Chatwindow.css";
+import "./Chatwindow.scss";
 
 export const Chatwindow = ({
   closeChatOpenDrawer,
@@ -29,31 +31,49 @@ export const Chatwindow = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string>("");
-  const [chat, setChat] = useState<{ sender: string; text: string }[]>([]);
+  const [chat, setChat] = useState<
+    { sender: string; text: string; sentTime: string }[]
+  >([]);
+  const [brainName, setBrainName] = useState<string>("");
+
   const storage = new Storage();
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     getBrainChat();
   }, []);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [chat]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const getBrainChat = async () => {
-    const currentBrain = await storage.get("activeBrainId");
+    const currentBrain: { id: string; name: string } =
+      await storage.get("activeBrain");
+    setBrainName(currentBrain.name);
     const userId = await storage.get("userId");
 
-    if (userId && currentBrain !== "") {
+    if (userId && currentBrain.id !== "") {
       const chatData = await getBrainChatFromAPI({
         receiverUserId: userId,
-        senderUserId: currentBrain,
+        senderUserId: currentBrain.id,
         lastCursor: 10000,
         pageSize: 100,
       });
       console.log("chatData >>> ", chatData);
-      const chatDataFormatted = chatData.map((chatItem) => {
-        return {
-          sender: chatItem.chat_type === "user" ? "User" : "Bot",
-          text: chatItem.text,
-        };
-      });
+      const chatDataFormatted = chatData
+        .map((chatItem) => {
+          return {
+            sender: chatItem.chat_type === "user" ? "User" : "Bot",
+            text: chatItem.text,
+            sentTime: chatItem.created_at,
+          };
+        })
+        .reverse();
       setChat(chatDataFormatted);
     }
   };
@@ -61,7 +81,10 @@ export const Chatwindow = ({
   const handleClose = () => closeChatOpenDrawer();
 
   const pushToChat = (msgToLoad, sender) =>
-    setChat((prevChat) => [...prevChat, { sender, text: msgToLoad }]);
+    setChat((prevChat) => [
+      ...prevChat,
+      { sender, text: msgToLoad, sentTime: moment().toISOString() },
+    ]);
 
   const insertChat = async (params) => await insertChatToAPI(params);
 
@@ -100,7 +123,7 @@ export const Chatwindow = ({
   };
 
   return (
-    <Drawer isOpen={true} placement="right" onClose={handleClose}>
+    <Drawer isOpen={true} placement="right" onClose={handleClose} size="md">
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader
@@ -111,19 +134,25 @@ export const Chatwindow = ({
           <Box className="chat-window-header-icon">
             <ArrowLeftIcon onClick={handleClose} />
           </Box>
-          Chat Window
+          {brainName}
         </DrawerHeader>
         <DrawerBody>
-          <div>
-            <div>
-              {chat.map((msg, index) => (
-                <div key={index}>
-                  <strong>{msg.sender}:</strong> {msg.text}
-                </div>
-              ))}
-            </div>
-          </div>
-          <Box>{loading && "Loading..."}</Box>
+          <Box
+            className="messages"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
+            {chat.map((msg, index) => (
+              <Box
+                key={index}
+                className={`message ${msg.sender === "Bot" ? "bot" : "user"}`}
+              >
+                {msg.text}
+                <div className="sent-time">{formatLocalTime(msg.sentTime)}</div>
+              </Box>
+            ))}
+          </Box>
+          <Box className="loading">{loading && "Typing..."}</Box>
+          <Box ref={messagesEndRef} />
         </DrawerBody>
         <DrawerFooter>
           <InputGroup>

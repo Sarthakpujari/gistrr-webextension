@@ -13,16 +13,13 @@ export const ChatPanel = ({
 }) => {
   return (
     <Box>
-      {brainList?.map((brain) => {
-        return (
-          <SingleBrain
-            brainId={brain.brain.id}
-            key={brain.brain.id}
-            brain={brain.brain}
-            closeDrawerOpenChat={closeDrawerOpenChat}
-          />
-        );
-      })}
+      {brainList?.map((brain) => (
+        <SingleBrain
+          key={brain.brain.id}
+          brain={brain.brain}
+          closeDrawerOpenChat={closeDrawerOpenChat}
+        />
+      ))}
     </Box>
   );
 };

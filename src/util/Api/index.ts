@@ -149,7 +149,20 @@ export const getBrainChat = async ({
   senderUserId: string;
   lastCursor: number;
   pageSize: number;
-}): Promise<any> => {
+}): Promise<
+  [
+    {
+      chat_type: "user" | "system" | "notif";
+      created_at: string;
+      cursor_id: number;
+      receiver_user_id: string;
+      response_source_url: Array<string>;
+      sender_user_id: string;
+      text: string;
+      url: string;
+    },
+  ]
+> => {
   const payload = {
     receiver_user_id: receiverUserId,
     sender_user_id: senderUserId,
