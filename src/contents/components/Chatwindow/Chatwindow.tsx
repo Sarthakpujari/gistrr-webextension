@@ -64,7 +64,6 @@ export const Chatwindow = ({
         lastCursor: 10000,
         pageSize: 100,
       });
-      console.log("chatData >>> ", chatData);
       const chatDataFormatted = chatData
         .map((chatItem) => {
           return {
@@ -89,15 +88,17 @@ export const Chatwindow = ({
   const insertChat = async (params) => await insertChatToAPI(params);
 
   const handleChat = async () => {
-    const currentBrain = await storage.get("activeBrainId");
+    const currentBrain: { id: string; name: string } =
+      await storage.get("activeBrain");
     const userId = await storage.get("userId");
+    const brainId = currentBrain.id;
 
-    if (userId && currentBrain !== "" && message !== "") {
+    if (userId && currentBrain.id !== "" && message !== "") {
       pushToChat(message, "User");
       setMessage("");
       setLoading(true);
       await insertChat({
-        receiverUserId: currentBrain,
+        receiverUserId: brainId,
         senderUserId: userId,
         text: message,
         url: "",
@@ -106,14 +107,14 @@ export const Chatwindow = ({
       });
       const messageFromLLM = await sendToLLM({
         userId: userId,
-        brainId: currentBrain,
+        brainId,
         query: message,
       });
       setLoading(false);
       pushToChat(messageFromLLM, "Bot");
       await insertChat({
         receiverUserId: userId,
-        senderUserId: currentBrain,
+        senderUserId: brainId,
         text: messageFromLLM,
         url: "",
         responseSourceUrl: [],
@@ -161,7 +162,6 @@ export const Chatwindow = ({
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleChat}
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={handleChat}>
