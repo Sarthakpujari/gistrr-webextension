@@ -29,6 +29,7 @@ import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
 import { SearchBar } from "./Searchbar/SearchBar";
 import { MoreIcon } from "../Icons/MoreIcon";
+import { Historypanel } from "./Historypanel";
 
 import "./Sidepanel.css";
 
@@ -87,7 +88,6 @@ export const Sidepanel = ({
       if (presentOnStorage) {
         const { id } = await getUser({ email });
         storage.set("userId", id);
-        console.log("id >>> ", id);
       } else {
         const { id: userId } = await createUser({
           email,
@@ -204,6 +204,7 @@ export const Sidepanel = ({
               </TabPanel>
               <TabPanel paddingLeft={0} paddingRight={0}>
                 <SearchBar />
+                <Historypanel />
               </TabPanel>
             </TabPanels>
           </Tabs>

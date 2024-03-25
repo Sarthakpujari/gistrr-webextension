@@ -1,0 +1,30 @@
+.single-chat-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.single-chat-container:hover {
+  background-color: #0000001a;
+  cursor: pointer;
+}
+
+.details-containe {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.details-container__text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.details-container__subtext {
+  font-size: 10px;
+  font-weight: 400;
+}
