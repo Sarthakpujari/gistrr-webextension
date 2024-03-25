@@ -161,6 +161,7 @@ export const Chatwindow = ({
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleChat}
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={handleChat}>

@@ -40,6 +40,7 @@ export const BookmarkInput = ({
   const [notes, setNotes] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const [brainId, setBrainId] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   let copyEventListener;
 
@@ -70,6 +71,7 @@ export const BookmarkInput = ({
   const handleSaveBookMark = async () => {
     const userId = await storage.get("userId");
     if (userId) {
+      setLoading(true);
       try {
         const { id } = await createBookmark({
           title,
@@ -77,11 +79,12 @@ export const BookmarkInput = ({
           note: notes,
           ownerId: userId,
         });
+        setLoading(false);
         handleCloseModal();
         toast({
           title: "Bookmark saved successfully",
           status: "success",
-          duration: 9000,
+          duration: 5000,
           isClosable: true,
           position: "top",
         });
@@ -167,7 +170,12 @@ export const BookmarkInput = ({
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="green" mr={3} onClick={handleSaveBookMark}>
+          <Button
+            colorScheme="green"
+            mr={3}
+            onClick={handleSaveBookMark}
+            isLoading={loading}
+          >
             Save
           </Button>
         </ModalFooter>

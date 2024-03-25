@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { createBrain, insertUserBrain } from "~src/util/Api";
@@ -20,18 +21,28 @@ import "./Createbrain.css";
 export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [brainName, setBrainName] = useState<string>("");
   const [collabEmail, setCollabEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const storage = new Storage();
+  const toast = useToast();
 
   const handleCreateBrain = async () => {
     const userId = await storage.get("userId");
-    console.log("userId:", userId);
     if (userId) {
+      setLoading(true);
       const { id } = await createBrain({ name: brainName });
-      const { id: insertUserBrainId } = await insertUserBrain({
+      await insertUserBrain({
         userId,
         brainId: id,
       });
-      if (insertUserBrainId) console.log("User Brain inserted successfully");
+      setOpenBrainModal(false);
+      setLoading(false);
+      toast({
+        title: "Bookmark saved successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
     } else {
       console.error("User not found");
     }
@@ -72,7 +83,12 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="green" mr={3} onClick={handleCreateBrain}>
+          <Button
+            colorScheme="green"
+            mr={3}
+            onClick={handleCreateBrain}
+            isLoading={loading}
+          >
             Save
           </Button>
         </ModalFooter>
