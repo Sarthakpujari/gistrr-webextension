@@ -39,3 +39,25 @@ export const createIndex = async (params: {
     console.error("Error posting data:", error);
   }
 };
+
+export const insertContent = async (params: {
+  userId: string;
+  brainId: string;
+  title: string;
+  contentUrl: string;
+  notes: string;
+}): Promise<{ msg: string }> => {
+  const payload = {
+    brain_id: params.brainId,
+    user_id: params.userId,
+    title: params.title,
+    content_url: params.contentUrl,
+    notes: params.notes,
+  };
+  try {
+    const res = await axios.post(`${backendUrl}/insert_content`, payload);
+    return new Promise((resolve) => resolve(res.data.message));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};

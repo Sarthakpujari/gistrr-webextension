@@ -16,10 +16,14 @@ import {
 import { Select } from "chakra-react-select";
 import { useEffect, useState, type SetStateAction } from "react";
 import { validLink } from "~src/util/regex";
+import { Storage } from "@plasmohq/storage";
+import {
+  createBookmark,
+  insertBrainBookmark,
+  insertContent,
+} from "~src/util/Api";
 
 import "./BookmarkInput.scss";
-import { Storage } from "@plasmohq/storage";
-import { createBookmark, insertBrainBookmark } from "~src/util/Api";
 
 export const BookmarkInput = ({
   openBookmarkModal,
@@ -65,31 +69,32 @@ export const BookmarkInput = ({
 
   const handleSaveBookMark = async () => {
     const userId = await storage.get("userId");
-    console.log("userId >>> ", userId);
     if (userId) {
       try {
         const { id } = await createBookmark({
           title,
           url,
-          noteUrl: "abcd",
           note: notes,
           ownerId: userId,
         });
-        const { id: insertBrainBookmarkId } = await insertBrainBookmark({
-          brainId,
-          bookmarkId: id,
-        });
-        console.log(
-          "Success! insertBrainBookmarkId >>> ",
-          insertBrainBookmarkId
-        );
         handleCloseModal();
-        return toast({
+        toast({
           title: "Bookmark saved successfully",
           status: "success",
           duration: 9000,
           isClosable: true,
           position: "top",
+        });
+        await insertBrainBookmark({
+          brainId,
+          bookmarkId: id,
+        });
+        const response = await insertContent({
+          userId,
+          brainId,
+          title,
+          contentUrl: url,
+          notes,
         });
       } catch (error) {
         console.error("BookmarkInput.tsx >>> ", error);
@@ -150,8 +155,8 @@ export const BookmarkInput = ({
                 <Select
                   size="lg"
                   options={brainList?.map((item) => {
-                    const { Name, id } = item.brain;
-                    return { value: id, label: Name };
+                    const { name, id } = item.brain;
+                    return { value: id, label: name };
                   })}
                   onChange={(selectedOption) => {
                     setBrainId(selectedOption.value);

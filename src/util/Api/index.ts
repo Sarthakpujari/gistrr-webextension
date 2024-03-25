@@ -79,15 +79,13 @@ export const createBookmark = async (params: {
   title: string;
   url: string;
   note: string;
-  ownerId;
-  noteUrl: string;
+  ownerId: string;
 }): Promise<{ id: string }> => {
   const payload = {
     title: params.title,
     url: params.url,
     note: params.note,
     owner_id: params.ownerId,
-    note_url: params.noteUrl,
   };
   try {
     const res = await axios.post(`${proxyUrl}/insertbookmark`, payload);
