@@ -16,15 +16,14 @@ import {
 } from "@chakra-ui/react";
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
+import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
-import { getUser } from "~src/util/Api";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
 import { SearchBar } from "./Searchbar/SearchBar";
 import { MoreIcon } from "../Icons/MoreIcon";
 import { Historypanel } from "./Historypanel";
-import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
 import "./Sidepanel.css";
 
@@ -79,17 +78,14 @@ export const Sidepanel = ({
         user: { email, displayName, photoURL },
       } = responseFromBackground;
 
-      const { id } = await getUser({ email });
-      if (id) {
-        storage.set("userId", id);
-      } else {
-        const userId = await CreateUser({
-          email,
-          name: displayName,
-          profileImageUrl: photoURL,
-        });
-        storage.set("userId", userId);
-      }
+      const userId = await CreateUser({
+        email,
+        name: displayName,
+        profileImageUrl: photoURL,
+      });
+
+      storage.set("userId", userId);
+
       setStates(email, displayName, photoURL);
     } catch (error) {
       console.log(error);

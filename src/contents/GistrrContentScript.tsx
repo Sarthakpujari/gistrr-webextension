@@ -47,7 +47,6 @@ const GoogleSidebar = () => {
 
   const getBrainList = async () => {
     const userId = await storage.get("userId");
-    console.log("userID >>> ", userId);
     if (!userId) {
       console.error("User not found");
       return;

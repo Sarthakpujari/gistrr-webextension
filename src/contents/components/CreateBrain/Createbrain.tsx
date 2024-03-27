@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { createBrain, insertUserBrain } from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
+import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
 import "./Createbrain.css";
 
@@ -35,6 +36,18 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
         userId,
         brainId: id,
       });
+      const dummyName = collabEmail.match(/^([^@]+)/)[1];
+      const newUserId = await CreateUser({
+        email: collabEmail,
+        name: dummyName,
+        profileImageUrl: "",
+      });
+      if (newUserId) {
+        await insertUserBrain({
+          userId: newUserId,
+          brainId: id,
+        });
+      }
       setOpenBrainModal(false);
       setLoading(false);
       toast({
