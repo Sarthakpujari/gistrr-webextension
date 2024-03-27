@@ -96,11 +96,11 @@ export const Sidepanel = ({
           password: "1234", // working only with "1234", tried with "dummy" didn't work
         });
         const { id: defaultBrainId } = await createBrain({ name: "default" });
-        const { id: insertUserBrainId } = await insertUserBrain({
+        await insertUserBrain({
           userId,
           brainId: defaultBrainId,
         });
-        const response = await createIndex({
+        await createIndex({
           userId,
           brainId: defaultBrainId,
         });
