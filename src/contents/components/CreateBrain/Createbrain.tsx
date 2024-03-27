@@ -20,12 +20,13 @@ import "./Createbrain.css";
 
 export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [brainName, setBrainName] = useState<string>("");
+  const [brainNameError, setBrainNameError] = useState<string>("");
   const [collabEmail, setCollabEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const storage = new Storage();
   const toast = useToast();
 
-  const handleCreateBrain = async () => {
+  const CreateBrain = async () => {
     const userId = await storage.get("userId");
     if (userId) {
       setLoading(true);
@@ -48,6 +49,22 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
     }
   };
 
+  const handleCreateBrain = async () => {
+    if (validateInputFields()) return;
+
+    CreateBrain();
+  };
+
+  const validateInputFields = () => {
+    let errorExists = false;
+    if (!brainName) {
+      errorExists = true;
+      setBrainNameError("Name can't be empty");
+    }
+
+    return errorExists;
+  };
+
   return (
     <Modal isOpen={openBrainModal} onClose={() => setOpenBrainModal(false)}>
       <ModalOverlay
@@ -63,12 +80,27 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
               <Text mb="12px" marginTop={2}>
                 Brain:
               </Text>
-              <Input
-                placeholder="Enter the name of your brain"
-                value={brainName}
-                onChange={(e) => setBrainName(e.target.value)}
+              <Box
+                display="flex"
+                flexDirection="column"
                 marginLeft="31px"
-              />
+                width="100%"
+              >
+                <Input
+                  placeholder="Enter name of the brain"
+                  value={brainName}
+                  onChange={(e) => {
+                    setBrainNameError("");
+                    setBrainName(e.target.value);
+                  }}
+                  isInvalid={!!brainNameError}
+                />
+                {brainNameError && (
+                  <Box fontSize="12px" marginTop="5px" color="red.500">
+                    {brainNameError}
+                  </Box>
+                )}
+              </Box>
             </Box>
             <Box className="input_container1">
               <Text mb="12px" marginTop={2} width="100px">
