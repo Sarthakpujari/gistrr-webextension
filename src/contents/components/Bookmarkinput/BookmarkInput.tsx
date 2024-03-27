@@ -38,38 +38,24 @@ export const BookmarkInput = ({
   const storage = new Storage();
   const toast = useToast();
   const [title, setTitle] = useState<string>("");
+  const [titleError, setTitleError] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [url, setUrl] = useState<string>("");
+  const [urlError, setUrlError] = useState<string>("");
   const [brainId, setBrainId] = useState<string>("");
+  const [brainError, setBrainError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  let copyEventListener;
-
   useEffect(() => {
-    setEventListener();
     setTitle(document.title);
     setUrl(window.location.href);
-
-    () => {
-      document.removeEventListener("copy", copyEventListener);
-    };
   }, []);
 
   const handleCloseModal = () => {
     setOpenBookmarkModal(false);
   };
 
-  const setEventListener = () => {
-    copyEventListener = document.addEventListener("copy", (e) => {
-      e.preventDefault();
-      const text = window.getSelection().toString();
-      if (validLink(text)) {
-        setUrl(text);
-      }
-    });
-  };
-
-  const handleSaveBookMark = async () => {
+  const saveBookmark = async () => {
     const userId = await storage.get("userId");
     const user: { displayName: string } = await storage.get("user");
     if (userId) {
@@ -117,6 +103,32 @@ export const BookmarkInput = ({
     }
   };
 
+  const handleSaveBookmark = async () => {
+    if (validateInputFields()) return;
+
+    saveBookmark();
+  };
+
+  const validateInputFields = () => {
+    let errorExists = false;
+    if (!title) {
+      errorExists = true;
+      setTitleError("Title can't be empty");
+    }
+
+    if (!url) {
+      errorExists = true;
+      setUrlError("URL can't be empty");
+    }
+
+    if (!brainId) {
+      errorExists = true;
+      setBrainError("You need to select a brain");
+    }
+
+    return errorExists;
+  };
+
   return (
     <Modal isOpen={openBookmarkModal} onClose={handleCloseModal}>
       <ModalOverlay
@@ -132,12 +144,27 @@ export const BookmarkInput = ({
               <Text mb="12px" marginTop={2}>
                 URL:
               </Text>
-              <Input
-                placeholder="Enter bookmark URL"
-                value={url}
+              <Box
+                display="flex"
+                flexDirection="column"
                 marginLeft="10px"
-                onChange={(e) => setUrl(e.target.value)}
-              />
+                width="100%"
+              >
+                <Input
+                  placeholder="Enter bookmark URL"
+                  value={url}
+                  onChange={(e) => {
+                    setUrl(e.target.value);
+                    setUrlError("");
+                  }}
+                  isInvalid={!!urlError}
+                />
+                {urlError && (
+                  <Box fontSize="12px" marginTop="5px" color="red.500">
+                    {urlError}
+                  </Box>
+                )}
+              </Box>
             </Box>
             <Box className="input_container_textarea">
               <Text mb="12px" marginTop={2}>
@@ -153,12 +180,27 @@ export const BookmarkInput = ({
               <Text mb="12px" marginTop={2}>
                 Title:
               </Text>
-              <Input
-                placeholder="Enter Title"
-                value={title}
+              <Box
+                display="flex"
+                flexDirection="column"
                 marginLeft="10px"
-                onChange={(e) => setTitle(e.target.value)}
-              />
+                width="100%"
+              >
+                <Input
+                  placeholder="Enter title"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    setTitleError("");
+                  }}
+                  isInvalid={!!titleError}
+                />
+                {titleError && (
+                  <Box fontSize="12px" marginTop="5px" color="red.500">
+                    {titleError}
+                  </Box>
+                )}
+              </Box>
             </Box>
             <Box className="input_container">
               <Text mb="12px" marginTop={2}>
@@ -172,18 +214,24 @@ export const BookmarkInput = ({
                     return { value: id, label: name };
                   })}
                   onChange={(selectedOption) => {
+                    setBrainError("");
                     setBrainId(selectedOption.value);
                   }}
                 />
               </Box>
             </Box>
+            {brainError && (
+              <Box fontSize="12px" color="red.500" marginLeft="51px">
+                {brainError}
+              </Box>
+            )}
           </Box>
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="green"
             mr={3}
-            onClick={handleSaveBookMark}
+            onClick={handleSaveBookmark}
             isLoading={loading}
           >
             Save
