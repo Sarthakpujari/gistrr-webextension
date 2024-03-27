@@ -17,19 +17,14 @@ import {
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import {
-  createBrain,
-  createIndex,
-  createUser,
-  getUser,
-  insertUserBrain,
-} from "~src/util/Api";
+import { getUser } from "~src/util/Api";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
 import { SearchBar } from "./Searchbar/SearchBar";
 import { MoreIcon } from "../Icons/MoreIcon";
 import { Historypanel } from "./Historypanel";
+import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
 import "./Sidepanel.css";
 
@@ -81,28 +76,17 @@ export const Sidepanel = ({
       });
 
       const {
-        presentOnStorage,
         user: { email, displayName, photoURL },
       } = responseFromBackground;
 
-      if (presentOnStorage) {
-        const { id } = await getUser({ email });
+      const { id } = await getUser({ email });
+      if (id) {
         storage.set("userId", id);
       } else {
-        const { id: userId } = await createUser({
+        const userId = await CreateUser({
           email,
           name: displayName,
           profileImageUrl: photoURL,
-          password: "1234", // working only with "1234", tried with "dummy" didn't work
-        });
-        const { id: defaultBrainId } = await createBrain({ name: "default" });
-        await insertUserBrain({
-          userId,
-          brainId: defaultBrainId,
-        });
-        await createIndex({
-          userId,
-          brainId: defaultBrainId,
         });
         storage.set("userId", userId);
       }
