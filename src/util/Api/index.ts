@@ -118,7 +118,7 @@ export const insertChat = async (params: {
   senderUserId: string;
   text: string;
   url: string;
-  responseSourceUrl: string;
+  responseSourceUrl: Array<string>;
   chatType: "user" | "system" | "notif";
 }): Promise<{ id: string }> => {
   const payload = {

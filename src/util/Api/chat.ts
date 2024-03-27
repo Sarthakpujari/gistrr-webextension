@@ -62,13 +62,13 @@ export const insertContent = async (params: {
   }
 };
 
-export const getUserBookmark = async (params: {
+export const getUserBookmarks = async (params: {
   userId: string;
-}): Promise<{ msg: string }> => {
+}): Promise<[]> => {
   const payload = { user_id: params.userId };
   try {
-    const res = await axios.post(`${backendUrl}/get_user_bookmark`, payload);
-    return new Promise((resolve) => resolve(res.data.message));
+    const res = await axios.post(`${backendUrl}/get_user_bookmarks`, payload);
+    return new Promise((resolve) => resolve(res.data.bookmarks));
   } catch (error) {
     console.error("Error posting data:", error);
   }

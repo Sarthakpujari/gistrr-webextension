@@ -20,6 +20,7 @@ import { Storage } from "@plasmohq/storage";
 import {
   createBookmark,
   insertBrainBookmark,
+  insertChat,
   insertContent,
 } from "~src/util/Api";
 
@@ -70,6 +71,7 @@ export const BookmarkInput = ({
 
   const handleSaveBookMark = async () => {
     const userId = await storage.get("userId");
+    const user: { displayName: string } = await storage.get("user");
     if (userId) {
       setLoading(true);
       try {
@@ -92,12 +94,20 @@ export const BookmarkInput = ({
           brainId,
           bookmarkId: id,
         });
-        const response = await insertContent({
+        await insertContent({
           userId,
           brainId,
           title,
           contentUrl: url,
           notes,
+        });
+        await insertChat({
+          senderUserId: userId,
+          receiverUserId: brainId,
+          text: `${user.displayName} has added ${title}`,
+          url,
+          chatType: "notif",
+          responseSourceUrl: [],
         });
       } catch (error) {
         console.error("BookmarkInput.tsx >>> ", error);
