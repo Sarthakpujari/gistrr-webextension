@@ -1,4 +1,10 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import {
   Button,
   DrawerBody,
@@ -16,8 +22,9 @@ import {
 } from "@chakra-ui/react";
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
-import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
+import { CreateUser } from "~src/util/Api/ClubbedRequests";
+import { UserContext } from "~src/contents/GistrrContentScript";
 import { ChatPanel } from "./Chatpanel";
 import { ChatIcon } from "../Icons/ChatIcon";
 import { HistoryIcon } from "../Icons/HistoryIcon";
@@ -47,24 +54,12 @@ export const Sidepanel = ({
   const [userName, setUserName] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
   const [userPhoto, setUserPhoto] = useState<string>("");
-
-  useEffect(() => {
-    userDetailsFromStore();
-  }, []);
+  const { setUser, setBrainList } = useContext(UserContext);
 
   const setStates = (email: string, displayName: string, photoURL: string) => {
     setUserEmail(email);
     setUserName(displayName);
     setUserPhoto(photoURL);
-  };
-
-  const userDetailsFromStore = async () => {
-    const user: { email: string; displayName: string; photoURL: string } =
-      await storage.get("user");
-    if (user) {
-      const { email, displayName, photoURL } = user;
-      setStates(email, displayName, photoURL);
-    }
   };
 
   const fetchUserFromBackground = async () => {
@@ -87,6 +82,7 @@ export const Sidepanel = ({
       storage.set("userId", userId);
 
       setStates(email, displayName, photoURL);
+      setUser({ userId, email, displayName, photoURL });
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +94,8 @@ export const Sidepanel = ({
         name: "auth",
         body: { action: "signout" },
       });
+      setUser({});
+      setBrainList([]);
       setUserName("");
       setUserEmail("");
       setUserPhoto("");

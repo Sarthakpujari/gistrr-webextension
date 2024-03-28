@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 
@@ -25,6 +25,8 @@ export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
 };
 
+export const UserContext = createContext({});
+
 const GoogleSidebar = () => {
   const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -34,6 +36,7 @@ const GoogleSidebar = () => {
     useState<boolean>(false);
   const storage = new Storage();
   const [brainList, setBrainList] = useState<any[]>([]);
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     if (openBookmarkModal || openDrawer || openChatWindow)
@@ -43,7 +46,7 @@ const GoogleSidebar = () => {
 
   useEffect(() => {
     getBrainList();
-  }, []);
+  }, [user]);
 
   const getBrainList = async () => {
     const userId = await storage.get("userId");
@@ -68,31 +71,33 @@ const GoogleSidebar = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <BookmarkInput
-        openBookmarkModal={openBookmarkModal}
-        setOpenBookmarkModal={setOpenBookmarkModal}
-        brainList={brainList}
-      />
-      <CreateBrain
-        openBrainModal={openBrainModal}
-        setOpenBrainModal={setOpenBrainModal}
-      />
-      <FloatingButtons
-        setOpenDrawer={setOpenDrawer}
-        setOpenBookmarkModal={setOpenBookmarkModal}
-        hideFloatingButtons={hideFloatingButtons}
-      />
-      <Sidepanel
-        openDrawer={openDrawer}
-        setOpenDrawer={setOpenDrawer}
-        openBrainModal={openBrainModal}
-        setOpenBrainModal={setOpenBrainModal}
-        closeDrawerOpenChat={closeDrawerOpenChat}
-        brainList={brainList}
-      />
-      {openChatWindow && (
-        <Chatwindow closeChatOpenDrawer={closeChatOpenDrawer} />
-      )}
+      <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
+        <BookmarkInput
+          openBookmarkModal={openBookmarkModal}
+          setOpenBookmarkModal={setOpenBookmarkModal}
+          brainList={brainList}
+        />
+        <CreateBrain
+          openBrainModal={openBrainModal}
+          setOpenBrainModal={setOpenBrainModal}
+        />
+        <FloatingButtons
+          setOpenDrawer={setOpenDrawer}
+          setOpenBookmarkModal={setOpenBookmarkModal}
+          hideFloatingButtons={hideFloatingButtons}
+        />
+        <Sidepanel
+          openDrawer={openDrawer}
+          setOpenDrawer={setOpenDrawer}
+          openBrainModal={openBrainModal}
+          setOpenBrainModal={setOpenBrainModal}
+          closeDrawerOpenChat={closeDrawerOpenChat}
+          brainList={brainList}
+        />
+        {openChatWindow && (
+          <Chatwindow closeChatOpenDrawer={closeChatOpenDrawer} />
+        )}
+      </UserContext.Provider>
     </ChakraProvider>
   );
 };

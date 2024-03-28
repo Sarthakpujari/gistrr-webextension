@@ -36,17 +36,19 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
         userId,
         brainId: id,
       });
-      const dummyName = collabEmail.match(/^([^@]+)/)[1];
-      const newUserId = await CreateUser({
-        email: collabEmail,
-        name: dummyName,
-        profileImageUrl: "",
-      });
-      if (newUserId) {
-        await insertUserBrain({
-          userId: newUserId,
-          brainId: id,
+      if (collabEmail !== "") {
+        const dummyName = collabEmail.match(/^([^@]+)/)[1];
+        const newUserId = await CreateUser({
+          email: collabEmail,
+          name: dummyName,
+          profileImageUrl: "",
         });
+        if (newUserId) {
+          await insertUserBrain({
+            userId: newUserId,
+            brainId: id,
+          });
+        }
       }
       setOpenBrainModal(false);
       setLoading(false);
@@ -57,6 +59,8 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
         isClosable: true,
         position: "top",
       });
+      setBrainName("");
+      setCollabEmail("");
     } else {
       console.error("User not found");
     }
