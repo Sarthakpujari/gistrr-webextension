@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
+import { UserContext } from "~src/contents/GistrrContentScript";
 import moment from "moment";
 
 import { getUserBookmarks } from "~src/util/Api";
@@ -9,10 +10,11 @@ import { SingleHistory } from "./Singlehistory";
 export const Historypanel = () => {
   const storage = new Storage();
   const [userBookmark, setUserBookmark] = useState<any[]>();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     fetchUserBookmark();
-  }, []);
+  }, [user]);
 
   const fetchUserBookmark = async () => {
     const userId = await storage.get("userId");

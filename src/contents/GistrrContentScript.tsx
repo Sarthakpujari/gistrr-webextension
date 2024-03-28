@@ -5,7 +5,6 @@ import { Storage } from "@plasmohq/storage";
 import { BookmarkInput } from "./components/Bookmarkinput";
 import { Sidepanel } from "./components/Sidepanel/Sidepanel";
 import { FloatingButtons } from "./components/Floatingbuttons";
-import { theme } from "./chakraThemeExtend";
 import { CreateBrain } from "./components/CreateBrain";
 import { Chatwindow } from "./components/Chatwindow";
 import { getUserBrains } from "~src/util/Api";
@@ -77,7 +76,7 @@ const GoogleSidebar = () => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
         <BookmarkInput
           openBookmarkModal={openBookmarkModal}
