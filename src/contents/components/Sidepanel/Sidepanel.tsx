@@ -56,6 +56,10 @@ export const Sidepanel = ({
   const [userPhoto, setUserPhoto] = useState<string>("");
   const { setUser, setBrainList } = useContext(UserContext);
 
+  useEffect(() => {
+    fetchUserFromBackground();
+  }, []);
+
   const setStates = (email: string, displayName: string, photoURL: string) => {
     setUserEmail(email);
     setUserName(displayName);

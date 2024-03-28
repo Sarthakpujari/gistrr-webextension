@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type SetStateAction } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 
@@ -15,6 +15,8 @@ import type { PlasmoCSConfig } from "plasmo";
 import "./GistrrContentScript.css";
 import cssText from "data-text:~/contents/GistrrContentScript.css";
 
+import type { UserContextType } from "~src/type";
+
 export const getStyle = () => {
   const style = document.createElement("style");
   style.textContent = cssText;
@@ -25,7 +27,12 @@ export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
 };
 
-export const UserContext = createContext({});
+export const UserContext = createContext<UserContextType>({
+  user: {},
+  setUser: () => {},
+  brainList: [],
+  setBrainList: () => {},
+});
 
 const GoogleSidebar = () => {
   const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
