@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type SetStateAction } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendBaseTheme } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 
 import { BookmarkInput } from "./components/Bookmarkinput";
@@ -76,7 +76,7 @@ const GoogleSidebar = () => {
   };
 
   return (
-    <ChakraProvider>
+    <ChakraProvider disableGlobalStyle={true}>
       <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
         <BookmarkInput
           openBookmarkModal={openBookmarkModal}
