@@ -25,10 +25,8 @@ import { formatLocalTime } from "~src/util/time_format";
 import "./Chatwindow.scss";
 
 export const Chatwindow = ({
-  closeChatOpenDrawer,
   setShowChatWindow,
 }: {
-  closeChatOpenDrawer: () => void;
   setShowChatWindow: (value: boolean) => void;
 }) => {
   const [loading, setLoading] = useState(false);

@@ -12,12 +12,13 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createBrain, insertUserBrain } from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
 import { CreateUser } from "~src/util/Api/ClubbedRequests";
 
 import "./Createbrain.css";
+import { BrainContext } from "~sidepanel";
 
 export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [brainName, setBrainName] = useState<string>("");
@@ -26,6 +27,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const storage = new Storage();
   const toast = useToast();
+  const { getBrainList } = useContext(BrainContext);
 
   const CreateBrain = async () => {
     const userId = await storage.get("userId");
@@ -52,6 +54,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
       }
       setOpenBrainModal(false);
       setLoading(false);
+      getBrainList();
       toast({
         title: "Bookmark saved successfully",
         status: "success",

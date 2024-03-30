@@ -9,6 +9,7 @@ export const SingleBrain = ({
 }: {
   brain: any;
   closeDrawerOpenChat: () => void;
+  setShowChatWindow: (show: boolean) => void;
 }) => {
   const storage = new Storage();
   const handleBrainClick = async () => {

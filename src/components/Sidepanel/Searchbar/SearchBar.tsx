@@ -5,19 +5,22 @@ import {
   InputLeftElement,
   InputRightElement,
 } from "@chakra-ui/react";
-import { Search2Icon, SmallCloseIcon } from "@chakra-ui/icons";
+import { Search2Icon, SmallCloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import type { ChangeEvent } from "react";
 
 export const SearchBar = ({
   searchTerm,
   setSearchTerm,
   onChangeHandler,
+  setShowCreateBrainModal,
 }: {
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
-  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setShowCreateBrainModal: (value: boolean) => void;
+  onChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <Box width="95%">
+    <Box width="95%" display="flex" gap="10px">
       <InputGroup>
         <InputLeftElement pointerEvents="none">
           <Search2Icon color="gray.800" />
@@ -31,17 +34,23 @@ export const SearchBar = ({
           onChange={onChangeHandler}
           value={searchTerm}
         />
-        {searchTerm && (
-          <InputRightElement>
+        <InputRightElement>
+          {searchTerm ? (
             <SmallCloseIcon
               cursor="pointer"
               onClick={() => {
                 setSearchTerm("");
+                // @ts-ignore
                 onChangeHandler({ target: { value: "" } });
               }}
             />
-          </InputRightElement>
-        )}
+          ) : (
+            <PlusSquareIcon
+              cursor="pointer"
+              onClick={() => setShowCreateBrainModal(true)}
+            />
+          )}
+        </InputRightElement>
       </InputGroup>
     </Box>
   );

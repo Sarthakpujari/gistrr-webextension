@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
 
 import { SingleBrain } from "./Singlebrain";
 import { SearchBar } from "../Searchbar";
 
 import "./Brainpanel.css";
+import { BrainContext } from "~sidepanel";
 
-export const ChatPanel = ({
-  closeDrawerOpenChat,
-  brainList,
+export const Brainpanel = ({
   setShowChatWindow,
+  closeDrawerOpenChat,
+  setShowCreateBrainModal,
 }: {
   closeDrawerOpenChat: () => void;
-  brainList: any[];
   setShowChatWindow: (show: boolean) => void;
+  setShowCreateBrainModal: (show: boolean) => void;
 }) => {
+  const { brainList } = useContext(BrainContext);
   const [filteredList, setFilteredList] = useState<any[]>(brainList);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -38,6 +40,7 @@ export const ChatPanel = ({
         searchTerm={searchTerm}
         onChangeHandler={onChangeHandler}
         setSearchTerm={setSearchTerm}
+        setShowCreateBrainModal={setShowCreateBrainModal}
       />
       {filteredList.map((brain, index) => (
         <SingleBrain

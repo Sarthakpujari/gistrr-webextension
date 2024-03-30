@@ -2,13 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 import { UserContext } from "~src/contents/GistrrContentScript";
-import moment from "moment";
 
 import { getUserBookmarks } from "~src/util/Api";
 import { SingleHistory } from "./Singlehistory";
 import { SearchBar } from "../Searchbar";
 
-export const Historypanel = () => {
+export const Historypanel = ({
+  setShowCreateBrainModal,
+}: {
+  setShowCreateBrainModal: (show: boolean) => void;
+}) => {
   const storage = new Storage();
   const [userBookmark, setUserBookmark] = useState<any[]>();
   const [filteredList, setFilteredList] = useState<any[]>();
@@ -48,6 +51,7 @@ export const Historypanel = () => {
         searchTerm={searchTerm}
         onChangeHandler={onChangeHandler}
         setSearchTerm={setSearchTerm}
+        setShowCreateBrainModal={setShowCreateBrainModal}
       />
       {filteredList?.map((bookmark, index) => (
         <SingleHistory key={index} bookmark={bookmark} />

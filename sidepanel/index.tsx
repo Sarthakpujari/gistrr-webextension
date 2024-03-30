@@ -9,18 +9,27 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Chatwindow } from "~src/components/Chatwindow";
+import { CreateBrain } from "~src/components/CreateBrain";
 import { HistoryIcon } from "~src/components/Icons/HistoryIcon";
-import { ChatPanel } from "~src/components/Sidepanel/Chatpanel";
 import { Historypanel } from "~src/components/Sidepanel/Historypanel";
-import { SearchBar } from "~src/components/Sidepanel/Searchbar";
+import { Brainpanel } from "~src/components/Sidepanel/Chatpanel";
 import { getUserBrains } from "~src/util/Api";
+
+import type { BrainContextType } from "~src/type";
+
+export const BrainContext = createContext<BrainContextType>({
+  brainList: [],
+  getBrainList: () => {},
+});
 
 function IndexSidePanel() {
   const [tabIndex, setTabIndex] = useState<number>(0);
   const [brainList, setBrainList] = useState<any[]>([]);
   const [showChatWindow, setShowChatWindow] = useState<boolean>(false);
+  const [showCreateBrainModal, setShowCreateBrainModal] =
+    useState<boolean>(false);
   const storage = new Storage();
 
   useEffect(() => {
@@ -60,29 +69,32 @@ function IndexSidePanel() {
       </TabList>
       <TabPanels>
         <TabPanel paddingLeft={0} paddingRight={0}>
-          <ChatPanel
+          <Brainpanel
             closeDrawerOpenChat={() => {}}
-            brainList={brainList}
             setShowChatWindow={setShowChatWindow}
+            setShowCreateBrainModal={setShowCreateBrainModal}
           />
         </TabPanel>
         <TabPanel paddingLeft={0} paddingRight={0}>
-          <Historypanel />
+          <Historypanel setShowCreateBrainModal={setShowCreateBrainModal} />
         </TabPanel>
       </TabPanels>
     </Tabs>
   );
 
-  const chatLayout = () => (
-    <Chatwindow
-      closeDrawerOpenChat={() => {}}
-      setShowChatWindow={setShowChatWindow}
-    />
-  );
+  const chatLayout = () => <Chatwindow setShowChatWindow={setShowChatWindow} />;
 
   return (
     <ChakraProvider>
-      {showChatWindow ? chatLayout() : tabLayout()}
+      <BrainContext.Provider value={{ brainList, getBrainList }}>
+        <Box display="flex" flexDirection="column" width="95%">
+          <Box>{showChatWindow ? chatLayout() : tabLayout()}</Box>
+        </Box>
+        <CreateBrain
+          openBrainModal={showCreateBrainModal}
+          setOpenBrainModal={setShowCreateBrainModal}
+        />
+      </BrainContext.Provider>
     </ChakraProvider>
   );
 }
