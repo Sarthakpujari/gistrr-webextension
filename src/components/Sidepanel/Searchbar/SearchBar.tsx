@@ -1,27 +1,21 @@
-import { Box, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { Search2Icon } from "@chakra-ui/icons";
-import { useState } from "react";
+import {
+  Box,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+} from "@chakra-ui/react";
+import { Search2Icon, SmallCloseIcon } from "@chakra-ui/icons";
 
 export const SearchBar = ({
-  list,
-  setFilteredList,
+  searchTerm,
+  setSearchTerm,
+  onChangeHandler,
 }: {
-  list: Array<any>;
-  setFilteredList: (filteredList: Array<any>) => void;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchParam = e.target.value.toLowerCase();
-    setSearchTerm(searchParam);
-    const filteredList = list.filter((item) => {
-      console.log("item", item);
-      if (searchParam === "") return true; // If search term is empty, show all items
-      return item.brain.name.toLowerCase().includes(searchParam);
-    });
-    setFilteredList(filteredList);
-  };
-
   return (
     <Box width="95%">
       <InputGroup>
@@ -37,6 +31,17 @@ export const SearchBar = ({
           onChange={onChangeHandler}
           value={searchTerm}
         />
+        {searchTerm && (
+          <InputRightElement>
+            <SmallCloseIcon
+              cursor="pointer"
+              onClick={() => {
+                setSearchTerm("");
+                onChangeHandler({ target: { value: "" } });
+              }}
+            />
+          </InputRightElement>
+        )}
       </InputGroup>
     </Box>
   );

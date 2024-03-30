@@ -16,6 +16,17 @@ export const ChatPanel = ({
   setShowChatWindow: (show: boolean) => void;
 }) => {
   const [filteredList, setFilteredList] = useState<any[]>(brainList);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchParam = e.target.value.toLowerCase();
+    setSearchTerm(searchParam);
+    const filteredList = brainList.filter((item) => {
+      if (searchParam === "") return true; // If search term is empty, show all items
+      return item.brain.name.toLowerCase().includes(searchParam);
+    });
+    setFilteredList([...filteredList]);
+  };
 
   useEffect(() => {
     setFilteredList(brainList);
@@ -23,7 +34,11 @@ export const ChatPanel = ({
 
   return (
     <Box>
-      <SearchBar list={brainList} setFilteredList={setFilteredList} />
+      <SearchBar
+        searchTerm={searchTerm}
+        onChangeHandler={onChangeHandler}
+        setSearchTerm={setSearchTerm}
+      />
       {filteredList.map((brain, index) => (
         <SingleBrain
           key={index}

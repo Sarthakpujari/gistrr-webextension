@@ -11,6 +11,8 @@ import { SearchBar } from "../Searchbar";
 export const Historypanel = () => {
   const storage = new Storage();
   const [userBookmark, setUserBookmark] = useState<any[]>();
+  const [filteredList, setFilteredList] = useState<any[]>();
+  const [searchTerm, setSearchTerm] = useState("");
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -26,13 +28,28 @@ export const Historypanel = () => {
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
       setUserBookmark(response);
+      setFilteredList(response);
     }
+  };
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchParam = e.target.value.toLowerCase();
+    setSearchTerm(searchParam);
+    const filteredList = userBookmark.filter((item) => {
+      if (searchParam === "") return true;
+      return item.title.toLowerCase().includes(searchParam);
+    });
+    setFilteredList([...filteredList]);
   };
 
   return (
     <Box>
-      <SearchBar />
-      {userBookmark?.map((bookmark, index) => (
+      <SearchBar
+        searchTerm={searchTerm}
+        onChangeHandler={onChangeHandler}
+        setSearchTerm={setSearchTerm}
+      />
+      {filteredList?.map((bookmark, index) => (
         <SingleHistory key={index} bookmark={bookmark} />
       ))}
     </Box>
