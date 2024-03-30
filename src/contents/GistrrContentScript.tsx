@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type SetStateAction } from "react";
-import { ChakraProvider, extendBaseTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendBaseTheme, extendTheme } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 
 import { BookmarkInput } from "./components/Bookmarkinput";
@@ -9,12 +9,13 @@ import { CreateBrain } from "./components/CreateBrain";
 import { Chatwindow } from "./components/Chatwindow";
 import { getUserBrains } from "~src/util/Api";
 
-import type { PlasmoCSConfig } from "plasmo";
+import type { PlasmoCSConfig, PlasmoGetShadowHostId } from "plasmo";
 
 import "./GistrrContentScript.css";
 import cssText from "data-text:~/contents/GistrrContentScript.css";
 
 import type { UserContextType } from "~src/type";
+import { chakraTheme } from "./chakraTheme";
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -32,6 +33,9 @@ export const UserContext = createContext<UserContextType>({
   brainList: [],
   setBrainList: () => {},
 });
+
+const HOST_ID = "engage-csui";
+export const getShadowHostId: PlasmoGetShadowHostId = () => HOST_ID;
 
 const GoogleSidebar = () => {
   const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
@@ -76,7 +80,11 @@ const GoogleSidebar = () => {
   };
 
   return (
-    <ChakraProvider disableGlobalStyle={true}>
+    <ChakraProvider
+      disableGlobalStyle={true}
+      theme={chakraTheme}
+      cssVarsRoot="gistrr"
+    >
       <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
         <BookmarkInput
           openBookmarkModal={openBookmarkModal}

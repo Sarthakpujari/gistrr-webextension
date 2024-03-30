@@ -7,9 +7,10 @@ import "./Brainpanel.css";
 export const ChatPanel = ({
   closeDrawerOpenChat,
   brainList,
+  setShowChatWindow,
 }: {
-  closeDrawerOpenChat: () => void;
   brainList: any[];
+  setShowChatWindow;
 }) => {
   return (
     <Box>
@@ -18,6 +19,7 @@ export const ChatPanel = ({
           key={index}
           brain={brain.brain}
           closeDrawerOpenChat={closeDrawerOpenChat}
+          setShowChatWindow={setShowChatWindow}
         />
       ))}
     </Box>

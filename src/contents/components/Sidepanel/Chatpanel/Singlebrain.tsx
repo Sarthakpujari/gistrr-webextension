@@ -5,6 +5,7 @@ import { formatLocalTime } from "~src/util/time_format";
 export const SingleBrain = ({
   brain,
   closeDrawerOpenChat,
+  setShowChatWindow,
 }: {
   brain: any;
   closeDrawerOpenChat: () => void;
@@ -14,6 +15,7 @@ export const SingleBrain = ({
     // TODO: put the active brain inside global state
     await storage.set("activeBrain", brain);
     closeDrawerOpenChat();
+    setShowChatWindow(true);
   };
 
   return (

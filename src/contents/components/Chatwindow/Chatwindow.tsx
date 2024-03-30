@@ -26,8 +26,10 @@ import "./Chatwindow.scss";
 
 export const Chatwindow = ({
   closeChatOpenDrawer,
+  setShowChatWindow,
 }: {
   closeChatOpenDrawer: () => void;
+  setShowChatWindow: (value: boolean) => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string>("");
@@ -77,7 +79,10 @@ export const Chatwindow = ({
     }
   };
 
-  const handleClose = () => closeChatOpenDrawer();
+  const handleClose = () => {
+    setShowChatWindow(false);
+    // closeChatOpenDrawer();
+  };
 
   const pushToChat = (msgToLoad, sender) =>
     setChat((prevChat) => [
