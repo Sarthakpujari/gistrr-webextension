@@ -10,11 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 import { useEffect, useState } from "react";
-import { Chatwindow } from "~src/contents/components/Chatwindow";
-import { HistoryIcon } from "~src/contents/components/Icons/HistoryIcon";
-import { ChatPanel } from "~src/contents/components/Sidepanel/Chatpanel";
-import { Historypanel } from "~src/contents/components/Sidepanel/Historypanel";
-import { SearchBar } from "~src/contents/components/Sidepanel/Searchbar";
+import { Chatwindow } from "~src/components/Chatwindow";
+import { HistoryIcon } from "~src/components/Icons/HistoryIcon";
+import { ChatPanel } from "~src/components/Sidepanel/Chatpanel";
+import { Historypanel } from "~src/components/Sidepanel/Historypanel";
+import { SearchBar } from "~src/components/Sidepanel/Searchbar";
 import { getUserBrains } from "~src/util/Api";
 
 function IndexSidePanel() {
