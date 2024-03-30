@@ -15,19 +15,17 @@ export const SingleHistory = ({
     user: { name: string };
   };
 }) => {
+  const trimLength = 20;
+  const trimmedTitle =
+    bookmark.title.length > trimLength
+      ? `${bookmark.title.substring(0, trimLength)}...`
+      : bookmark.title;
   return (
     <Box className="single-chat-container">
       <Box className="details-containe">
-        <Box display="flex" gap="3px">
-          <Text fontSize="14px" fontWeight="600">
-            {bookmark.title}
-          </Text>{" "}
-          <Text fontSize="14px" fontWeight="400">
-            Added to
-          </Text>{" "}
-          <Text fontSize="14px" fontWeight="600">
-            {bookmark.brain_name}
-          </Text>
+        <Box>
+          <strong>{trimmedTitle}</strong> added to{" "}
+          <strong>{bookmark.brain_name}</strong>
         </Box>
         <Box style={{ fontSize: "10px", fontWeight: "400" }} color="grey.500">
           Added {moment(bookmark.created_at).fromNow()}
