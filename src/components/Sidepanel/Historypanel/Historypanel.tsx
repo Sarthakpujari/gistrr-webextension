@@ -6,6 +6,7 @@ import moment from "moment";
 
 import { getUserBookmarks } from "~src/util/Api";
 import { SingleHistory } from "./Singlehistory";
+import { SearchBar } from "../Searchbar";
 
 export const Historypanel = () => {
   const storage = new Storage();
@@ -30,6 +31,7 @@ export const Historypanel = () => {
 
   return (
     <Box>
+      <SearchBar />
       {userBookmark?.map((bookmark, index) => (
         <SingleHistory key={index} bookmark={bookmark} />
       ))}

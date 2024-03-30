@@ -60,7 +60,6 @@ function IndexSidePanel() {
       </TabList>
       <TabPanels>
         <TabPanel paddingLeft={0} paddingRight={0}>
-          <SearchBar />
           <ChatPanel
             closeDrawerOpenChat={() => {}}
             brainList={brainList}
@@ -68,7 +67,6 @@ function IndexSidePanel() {
           />
         </TabPanel>
         <TabPanel paddingLeft={0} paddingRight={0}>
-          <SearchBar />
           <Historypanel />
         </TabPanel>
       </TabPanels>
