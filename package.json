@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
+    "antd": "^5.15.4",
     "axios": "^1.6.8",
     "chakra-react-select": "^4.7.6",
     "firebase": "^10.8.1",

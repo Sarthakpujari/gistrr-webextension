@@ -14,17 +14,11 @@ export const FloatingButtons = ({
   if (hideFloatingButtons) return null;
   return (
     <div className="floating-container">
-      <div className="floating-button-container">
-        <div onClick={() => setOpenDrawer(true)} style={{ cursor: "pointer" }}>
-          <PanelIcon />
-        </div>
-        <hr className="floating-button-separator" />
-        <div
-          onClick={() => setOpenBookmarkModal(true)}
-          style={{ cursor: "pointer" }}
-        >
-          <BookmarkIcon />
-        </div>
+      <div
+        onClick={() => setOpenBookmarkModal(true)}
+        className="floating-button"
+      >
+        <BookmarkIcon />
       </div>
     </div>
   );
