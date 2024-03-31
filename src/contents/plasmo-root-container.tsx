@@ -8,7 +8,7 @@ import type { FC } from "react";
 import { createRoot } from "react-dom/client";
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://www.plasmo.com/*"],
+  matches: ["<all_urls>"],
 };
 
 export const getRootContainer = () =>
@@ -25,21 +25,21 @@ export const getRootContainer = () =>
   });
 
 const PlasmoOverlay: FC<PlasmoCSUIProps> = () => {
-  return (
-    <span
-      style={{
-        borderRadius: 4,
-        background: "yellow",
-        padding: 4,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        transform: "translateY(-24px) translateX(42px)",
-      }}
-    >
-      CSUI ROOT CONTAINER
-    </span>
-  );
+  // return (
+  //   <span
+  //     style={{
+  //       borderRadius: 4,
+  //       background: "yellow",
+  //       padding: 4,
+  //       position: "absolute",
+  //       top: 0,
+  //       left: 0,
+  //       transform: "translateY(-24px) translateX(42px)",
+  //     }}
+  //   >
+  //     CSUI ROOT CONTAINER
+  //   </span>
+  // );
 };
 
 export const render: PlasmoRender<PlasmoCSUIJSXContainer> = async ({

@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { useEffect, useState, type SetStateAction } from "react";
-import { validLink } from "~src/util/regex";
 import { Storage } from "@plasmohq/storage";
 import {
   createBookmark,
@@ -68,9 +67,8 @@ export const BookmarkInput = ({
           ownerId: userId,
         });
         setLoading(false);
-        handleCloseModal();
         toast({
-          title: "Bookmark saved successfully",
+          title: "Bookmark added successfully",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -95,8 +93,16 @@ export const BookmarkInput = ({
           chatType: "notif",
           responseSourceUrl: [],
         });
+        toast({
+          title: "To access your brain open the side panel",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+        handleCloseModal();
       } catch (error) {
-        console.error("BookmarkInput.tsx >>> ", error);
+        console.error(error);
       }
     } else {
       console.error("User not found");

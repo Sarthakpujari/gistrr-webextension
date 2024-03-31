@@ -1,10 +1,21 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type SetStateAction } from "react";
+import { ChakraProvider, extendBaseTheme, extendTheme } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
+
+import { BookmarkInput } from "../components/Bookmarkinput";
+import { Sidepanel } from "../components/Sidepanel/Sidepanel";
 import { FloatingButtons } from "../components/Floatingbuttons";
+import { CreateBrain } from "../components/CreateBrain";
+import { Chatwindow } from "../components/Chatwindow";
+import { getUserBrains } from "~src/util/Api";
+
+import type { PlasmoCSConfig, PlasmoGetShadowHostId } from "plasmo";
+
+import "./GistrrContentScript.css";
 import cssText from "data-text:~/contents/GistrrContentScript.css";
 
 import type { UserContextType } from "~src/type";
-import type { PlasmoCSConfig, PlasmoGetShadowHostId } from "plasmo";
+import { chakraTheme } from "./chakraTheme";
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -28,9 +39,6 @@ export const getShadowHostId: PlasmoGetShadowHostId = () => HOST_ID;
 
 const GoogleSidebar = () => {
   const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
-  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [openBrainModal, setOpenBrainModal] = useState<boolean>(false);
-  const [openChatWindow, setOpenChatWindow] = useState<boolean>(false);
   const [hideFloatingButtons, setHideFloatingButtons] =
     useState<boolean>(false);
   const storage = new Storage();
@@ -38,38 +46,43 @@ const GoogleSidebar = () => {
   const [user, setUser] = useState<any>({});
 
   useEffect(() => {
-    if (openBookmarkModal || openDrawer || openChatWindow)
-      setHideFloatingButtons(true);
+    if (openBookmarkModal) setHideFloatingButtons(true);
     else setHideFloatingButtons(false);
-  }, [openBookmarkModal, openDrawer]);
+  }, [openBookmarkModal]);
+
+  useEffect(() => {
+    getBrainList();
+  }, [user]);
+
+  const getBrainList = async () => {
+    const userId = await storage.get("userId");
+    if (!userId) {
+      console.error("User not found");
+      return;
+    } else {
+      const brainListFromUser = await getUserBrains(userId);
+      setBrainList(brainListFromUser);
+    }
+  };
 
   return (
-    <>
-      {/* <BookmarkInput
+    <ChakraProvider
+      disableGlobalStyle={true}
+      theme={chakraTheme}
+      cssVarsRoot="gistrr"
+    >
+      <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
+        <BookmarkInput
           openBookmarkModal={openBookmarkModal}
           setOpenBookmarkModal={setOpenBookmarkModal}
           brainList={brainList}
-        /> */}
-      {openBookmarkModal && (
-        <div className="cssText.floatingContainer">
-          <div className="modal-content">
-            <button
-              className="close-modal-button"
-              onClick={() => setOpenBookmarkModal(false)}
-            >
-              Close
-            </button>
-            <h2>Modal Content</h2>
-            <p>This is the content of the modal.</p>
-          </div>
-        </div>
-      )}
-      <FloatingButtons
-        setOpenDrawer={setOpenDrawer}
-        setOpenBookmarkModal={setOpenBookmarkModal}
-        hideFloatingButtons={hideFloatingButtons}
-      />
-    </>
+        />
+        <FloatingButtons
+          setOpenBookmarkModal={setOpenBookmarkModal}
+          hideFloatingButtons={hideFloatingButtons}
+        />
+      </UserContext.Provider>
+    </ChakraProvider>
   );
 };
 
