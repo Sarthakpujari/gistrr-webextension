@@ -19,6 +19,7 @@ import { Historypanel } from "~src/components/Sidepanel/Historypanel";
 import { Brainpanel } from "~src/components/Sidepanel/Chatpanel";
 import { getUserBrains } from "~src/util/Api";
 import { CreateUser } from "~src/util/Api/ClubbedRequests";
+import { BookmarkInput } from "~src/components/Bookmarkinput";
 
 import type { BrainContextType } from "~src/type";
 
@@ -38,12 +39,23 @@ function IndexSidePanel() {
   const [showCreateBrainModal, setShowCreateBrainModal] =
     useState<boolean>(false);
   const [loginState, setLoginState] = useState<boolean>(false);
+  const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
   const [user, setUser] = useState<any>({});
   const storage = new Storage();
 
   useEffect(() => {
     checkLoginState();
+    checkStorageToOpenModal();
   }, []);
+
+  const checkStorageToOpenModal = () => {
+    storage.get("openBookmarkModal").then((value) => {
+      if (value) {
+        setOpenBookmarkModal(true);
+        storage.remove("openBookmarkModal");
+      }
+    });
+  };
 
   const checkLoginState = async () => {
     const userId = await storage.get("userId");
@@ -176,6 +188,11 @@ function IndexSidePanel() {
           <CreateBrain
             openBrainModal={showCreateBrainModal}
             setOpenBrainModal={setShowCreateBrainModal}
+          />
+          <BookmarkInput
+            openBookmarkModal={openBookmarkModal}
+            setOpenBookmarkModal={setOpenBookmarkModal}
+            brainList={brainList}
           />
         </BrainContext.Provider>
       </UserContext.Provider>

@@ -1,12 +1,17 @@
-import { sendToBackground } from "@plasmohq/messaging";
+import { Storage } from "@plasmohq/storage";
 import { BookmarkIcon } from "../Icons/BookmarkIcon";
+import { usePort } from "@plasmohq/messaging/hook";
 
 export const FloatingButtons = ({
   setOpenBookmarkModal,
   hideFloatingButtons,
 }) => {
+  const port = usePort("panel");
+  const storage = new Storage();
+
   const handleBookmarkButtonClick = async () => {
-    setOpenBookmarkModal(true);
+    port.send({ action: "toggle-panel-state" });
+    storage.set("openBookmarkModal", true);
   };
 
   if (hideFloatingButtons) return null;
