@@ -5,7 +5,7 @@ import { SingleBrain } from "./Singlebrain";
 import { SearchBar } from "../Searchbar";
 
 import "./Brainpanel.css";
-import { BrainContext } from "~sidepanel";
+import { BrainContext } from "~src/sidepanel";
 
 export const Brainpanel = ({
   setShowChatWindow,
