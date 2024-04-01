@@ -7,11 +7,6 @@
   margin-top: 5px;
 }
 
-.single-chat-container:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
 .image-contianer {
   width: 40px;
   height: 40px;

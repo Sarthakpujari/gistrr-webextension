@@ -48,7 +48,7 @@ function IndexSidePanel() {
     checkStorageToOpenModal();
   }, []);
 
-  const checkStorageToOpenModal = () => {
+  const checkStorageToOpenModal = async () => {
     storage.get("openBookmarkModal").then((value) => {
       if (value) {
         setOpenBookmarkModal(true);
@@ -190,9 +190,9 @@ function IndexSidePanel() {
             setOpenBrainModal={setShowCreateBrainModal}
           />
           <BookmarkInput
+            brainList={brainList}
             openBookmarkModal={openBookmarkModal}
             setOpenBookmarkModal={setOpenBookmarkModal}
-            brainList={brainList}
           />
         </BrainContext.Provider>
       </UserContext.Provider>

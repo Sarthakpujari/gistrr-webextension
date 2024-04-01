@@ -26,13 +26,13 @@ import {
 import "./BookmarkInput.scss";
 
 export const BookmarkInput = ({
+  brainList,
   openBookmarkModal,
   setOpenBookmarkModal,
-  brainList,
 }: {
+  brainList: any[];
   openBookmarkModal: boolean;
   setOpenBookmarkModal: (value: SetStateAction<boolean>) => void;
-  brainList: any[];
 }) => {
   const storage = new Storage();
   const toast = useToast();
@@ -46,9 +46,15 @@ export const BookmarkInput = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setTitle(document.title);
-    setUrl(window.location.href);
+    getBookmarkDetails();
   }, []);
+
+  const getBookmarkDetails = async () => {
+    const pageTitle = await storage.get("bookmark-page-title");
+    const pageUrl = await storage.get("bookmark-page-url");
+    setTitle(pageTitle);
+    setUrl(pageUrl);
+  };
 
   const handleCloseModal = () => {
     setOpenBookmarkModal(false);
@@ -74,6 +80,7 @@ export const BookmarkInput = ({
           isClosable: true,
           position: "top",
         });
+        handleCloseModal();
         await insertBrainBookmark({
           brainId,
           bookmarkId: id,
@@ -93,14 +100,6 @@ export const BookmarkInput = ({
           chatType: "notif",
           responseSourceUrl: [],
         });
-        toast({
-          title: "To access your brain open the side panel",
-          status: "info",
-          duration: 5000,
-          isClosable: true,
-          position: "top",
-        });
-        handleCloseModal();
       } catch (error) {
         console.error(error);
       }

@@ -126,15 +126,18 @@ export const Chatwindow = ({
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("send-chat-btn").click();
+    }
+  };
+
   return (
     <Drawer isOpen={true} placement="right" onClose={handleClose} size="md">
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerHeader
-          bgColor="green"
-          color="white"
-          className="chat-window-header"
-        >
+        <DrawerHeader className="chat-window-header">
           <Box className="chat-window-header-icon">
             <ArrowLeftIcon onClick={handleClose} />
           </Box>
@@ -165,9 +168,15 @@ export const Chatwindow = ({
               placeholder="Type your message here..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleChat}>
+              <Button
+                h="1.75rem"
+                size="sm"
+                onClick={handleChat}
+                id="send-chat-btn"
+              >
                 Send
               </Button>
             </InputRightElement>

@@ -20,7 +20,14 @@ export const SingleBrain = ({
   };
 
   return (
-    <Box className="single-chat-container" onClick={handleBrainClick}>
+    <Box
+      className="single-chat-container"
+      onClick={handleBrainClick}
+      _hover={{
+        backgroundColor: "gray.100",
+        cursor: "pointer",
+      }}
+    >
       <Box className="image-contianer"></Box>
       <Box className="details-container">
         <Box className="details-container__text">{brain.name}</Box>
