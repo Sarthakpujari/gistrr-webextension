@@ -56,7 +56,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
       setLoading(false);
       getBrainList();
       toast({
-        title: "Bookmark saved successfully",
+        title: "New Brain created successfully",
         status: "success",
         duration: 5000,
         isClosable: true,

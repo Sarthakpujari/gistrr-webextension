@@ -49,8 +49,9 @@ function IndexSidePanel() {
   }, []);
 
   const checkStorageToOpenModal = async () => {
+    const userId = await storage.get('userId');
     storage.get("openBookmarkModal").then((value) => {
-      if (value) {
+      if (value && userId) {
         setOpenBookmarkModal(true);
         storage.remove("openBookmarkModal");
       }
