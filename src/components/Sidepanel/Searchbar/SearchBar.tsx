@@ -4,6 +4,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Search2Icon, SmallCloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import type { ChangeEvent } from "react";
@@ -45,10 +46,12 @@ export const SearchBar = ({
               }}
             />
           ) : (
-            <PlusSquareIcon
-              cursor="pointer"
-              onClick={() => setShowCreateBrainModal(true)}
-            />
+            <Tooltip hasArrow label="Create brain" size="lg" placement="left">
+              <PlusSquareIcon
+                cursor="pointer"
+                onClick={() => setShowCreateBrainModal(true)}
+              />
+            </Tooltip>
           )}
         </InputRightElement>
       </InputGroup>
