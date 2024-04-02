@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const backendUrl = "http://127.0.0.1:5000";
+export const backendUrl = process.env.PLASMO_PUBLIC_BACKEND_URL;
 
 export const chat = async ({
   userId,
