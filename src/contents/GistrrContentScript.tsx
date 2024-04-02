@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
 import { Storage } from "@plasmohq/storage";
 
 import { FloatingButtons } from "../components/Floatingbuttons";
@@ -11,7 +10,6 @@ import "./GistrrContentScript.css";
 import cssText from "data-text:~/contents/GistrrContentScript.css";
 
 import type { UserContextType } from "~src/type";
-import { chakraTheme } from "./chakraTheme";
 
 export const getStyle = () => {
   const style = document.createElement("style");
@@ -62,18 +60,10 @@ const GoogleSidebar = () => {
   };
 
   return (
-    <ChakraProvider
-      disableGlobalStyle={true}
-      theme={chakraTheme}
-      cssVarsRoot="gistrr"
-    >
-      <UserContext.Provider value={{ user, setUser, brainList, setBrainList }}>
-        <FloatingButtons
-          setOpenBookmarkModal={setOpenBookmarkModal}
-          hideFloatingButtons={hideFloatingButtons}
-        />
-      </UserContext.Provider>
-    </ChakraProvider>
+    <FloatingButtons
+      setOpenBookmarkModal={setOpenBookmarkModal}
+      hideFloatingButtons={hideFloatingButtons}
+    />
   );
 };
 
