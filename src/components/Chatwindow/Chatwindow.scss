@@ -15,7 +15,7 @@
   border-radius: 8px;
 }
 
-.system {
+.bot {
   background-color: #dcf8c6;
   align-self: flex-start;
 }
@@ -25,9 +25,10 @@
   align-self: flex-end;
 }
 
-.notif {
-  background-color: #536cbd;
-  align-self:center;
+.system {
+  font-size: 10px;
+  background-color: #cfe2ff;
+  align-self: center;
 }
 
 .loading {
@@ -38,7 +39,7 @@
 
 .sent-time {
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 8px;
   color: #888;
   bottom: -16px;
   left: 12px;

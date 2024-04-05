@@ -73,14 +73,6 @@ export const BookmarkInput = ({
           ownerId: userId,
         });
         setLoading(false);
-        toast({
-          title: "Bookmark added successfully",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-          position: "top",
-        });
-        handleCloseModal();
         await insertBrainBookmark({
           brainId,
           bookmarkId: id,
@@ -100,6 +92,14 @@ export const BookmarkInput = ({
           chatType: "notif",
           responseSourceUrl: [],
         });
+        toast({
+          title: "Bookmark added successfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+        handleCloseModal();
       } catch (error) {
         console.error(error);
       }

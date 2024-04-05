@@ -59,39 +59,28 @@ export const Chatwindow = ({
     const userId = await storage.get("userId");
 
     if (userId && currentBrain.id !== "") {
-      // const chatData = await getBrainChatFromAPI({
-      //   receiverUserId: userId,
-      //   senderUserId: currentBrain.id,
-      //   lastCursor: 10000,
-      //   pageSize: 100,
-      // });
-      // console.log("userId>>>", userId)
-      const {chatData, notifData} = await getChatAndNotif(
-        userId, 
+      const { chatData, notifData } = await getChatAndNotif(
+        userId,
         currentBrain.id
-      )
-      // console.log("chat data >>>", chatData)
-      // console.log("notif data >>>", notifData)
-      // Assuming chatData and notifData are already defined
-
-// Merge the two arrays
+      );
       const completeChat = [...chatData, ...notifData];
-
-      // Sort the merged array by the created_at property
-      const sortedCompleteChat= completeChat.sort((a, b) => {
-        // Convert created_at to Date objects for comparison
+      const sortedCompleteChat = completeChat.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
       });
 
-// sortedArray now contains all items from both arrays, sorted by created_at
-      const chatDataFormatted = sortedCompleteChat
-        .map((chatItem) => {
-          return {
-            sender: chatItem.chat_type === "user" ? "User" : (chatItem.chat_type === "system" ? "System" : "Notif"),
-            text: chatItem.text,
-            sentTime: chatItem.created_at,
-          };
-        });
+      // sortedArray now contains all items from both arrays, sorted by created_at
+      const chatDataFormatted = sortedCompleteChat.map((chatItem) => {
+        return {
+          sender:
+            chatItem.chat_type === "user"
+              ? "User"
+              : chatItem.chat_type === "system"
+                ? "Bot"
+                : "Notif",
+          text: chatItem.text,
+          sentTime: chatItem.created_at,
+        };
+      });
       setChat(chatDataFormatted);
     }
   };
@@ -170,10 +159,14 @@ export const Chatwindow = ({
             {chat.map((msg, index) => (
               <Box
                 key={index}
-                className={`message ${msg.sender === "Bot" ? "bot" : "user"}`}
+                className={`message ${msg.sender === "Bot" ? "bot" : msg.sender === "User" ? "user" : "system"}`}
               >
                 {msg.text}
-                <div className="sent-time">{formatLocalTime(msg.sentTime)}</div>
+                {msg.sender !== "Notif" && (
+                  <div className="sent-time">
+                    {formatLocalTime(msg.sentTime)}
+                  </div>
+                )}
               </Box>
             ))}
           </Box>
