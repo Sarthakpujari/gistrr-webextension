@@ -15,7 +15,7 @@
   border-radius: 8px;
 }
 
-.bot {
+.system {
   background-color: #dcf8c6;
   align-self: flex-start;
 }
@@ -23,6 +23,11 @@
 .user {
   background-color: #e2e2e2;
   align-self: flex-end;
+}
+
+.notif {
+  background-color: #536cbd;
+  align-self:center;
 }
 
 .loading {

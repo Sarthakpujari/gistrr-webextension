@@ -174,3 +174,38 @@ export const getBrainChat = async ({
     console.error("Error posting data:", error);
   }
 };
+
+export const getBrainNotif = async ({
+  receiverUserId,
+  lastCursor,
+  pageSize,
+}: {
+  receiverUserId: string;
+  lastCursor: number;
+  pageSize: number;
+}): Promise<
+  [
+    {
+      chat_type: "user" | "system" | "notif";
+      created_at: string;
+      cursor_id: number;
+      receiver_user_id: string;
+      response_source_url: Array<string>;
+      sender_user_id: string;
+      text: string;
+      url: string;
+    },
+  ]
+> => {
+  const payload = {
+    receiver_user_id: receiverUserId,
+    last_cursor: lastCursor,
+    page_size: pageSize,
+  };
+  try {
+    const res = await axios.post(`${proxyUrl}/getbrainnotif`, payload);
+    return new Promise((resolve) => resolve(res.data.chat));
+  } catch (error) {
+    console.error("Error posting data:", error);
+  }
+};
