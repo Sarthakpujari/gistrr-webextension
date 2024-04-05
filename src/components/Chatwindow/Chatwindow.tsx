@@ -65,7 +65,9 @@ export const Chatwindow = ({
       );
       const completeChat = [...chatData, ...notifData];
       const sortedCompleteChat = completeChat.sort((a, b) => {
-        return new Date(a.created_at) - new Date(b.created_at);
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
       });
 
       // sortedArray now contains all items from both arrays, sorted by created_at
