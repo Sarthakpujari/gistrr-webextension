@@ -9,22 +9,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Tag,
+  TagCloseButton,
+  TagLabel,
   Text,
   useToast,
+  Wrap,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { createBrain, insertUserBrain } from "~src/util/Api";
 import { Storage } from "@plasmohq/storage";
 import { CreateUser } from "~src/util/Api/ClubbedRequests";
+import { BrainContext } from "~src/sidepanel";
 
 import "./Createbrain.css";
-import { BrainContext } from "~src/sidepanel";
+
+const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const isValidEmail = (email: string) => EMAIL_REGEXP.test(email);
 
 export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [brainName, setBrainName] = useState<string>("");
   const [brainNameError, setBrainNameError] = useState<string>("");
   const [collabEmail, setCollabEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [emailInput, setEmailInput] = useState<string>("");
+  const [emailList, setEmailList] = useState<string[]>([]);
   const storage = new Storage();
   const toast = useToast();
   const { getBrainList } = useContext(BrainContext);
@@ -85,6 +94,67 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
     return errorExists;
   };
 
+  const removeEmail = (email) => {
+    const index = emailList.findIndex((e) => e === email);
+    if (index !== -1) {
+      const newEmails = [...emailList];
+      newEmails.splice(index, 1);
+      setEmailList(newEmails);
+    }
+  };
+
+  const handleCloseClick = (email) => {
+    removeEmail(email);
+  };
+
+  const Chip = ({ email, onCloseClick }) => (
+    <Tag key={email} borderRadius="full" variant="solid" colorScheme="green">
+      <TagLabel>{email}</TagLabel>
+      <TagCloseButton
+        onClick={() => {
+          onCloseClick(email);
+        }}
+      />
+    </Tag>
+  );
+
+  const ChipList = ({ emails = [], onCloseClick }) => (
+    <Wrap spacing={1} mb={3}>
+      {emails.map((email) => (
+        <Chip email={email} key={email} onCloseClick={onCloseClick} />
+      ))}
+    </Wrap>
+  );
+
+  const emailChipExists = (email) => emailList.includes(email);
+
+  const addEmails = (emailsToAdd) => {
+    const validatedEmails = emailsToAdd
+      .map((e) => e.trim())
+      .filter((email) => isValidEmail(email) && !emailChipExists(email));
+
+    const newEmails = [...emailList, ...validatedEmails];
+
+    setEmailList(newEmails);
+    setEmailInput("");
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+
+    const pastedData = e.clipboardData.getData("text");
+    const pastedEmails = pastedData.split(",");
+    addEmails(pastedEmails);
+  };
+
+  const handleKeyDown = (e) => {
+    if (["Enter", "Tab", ","].includes(e.key)) {
+      e.preventDefault();
+
+      addEmails([emailInput]);
+    }
+  };
+
   return (
     <Modal isOpen={openBrainModal} onClose={() => setOpenBrainModal(false)}>
       <ModalOverlay
@@ -124,19 +194,21 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
             </Box>
             <Box className="input_container1">
               <Text mb="12px" marginTop={2} width="100px">
-                Share with:
+                Enter email:
               </Text>
               <Input
                 placeholder="add collaborators by email address"
-                value={collabEmail}
-                onChange={(e) => setCollabEmail(e.target.value)}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
             </Box>
+            <ChipList emails={emailList} onCloseClick={handleCloseClick} />
           </Box>
         </ModalBody>
         <ModalFooter>
           <Button
-            colorScheme="green"
+            colorScheme="blue"
             mr={3}
             onClick={handleCreateBrain}
             isLoading={loading}

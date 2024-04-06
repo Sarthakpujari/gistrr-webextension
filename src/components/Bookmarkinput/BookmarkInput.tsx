@@ -234,7 +234,7 @@ export const BookmarkInput = ({
         </ModalBody>
         <ModalFooter>
           <Button
-            colorScheme="green"
+            colorScheme="blue"
             mr={3}
             onClick={handleSaveBookmark}
             isLoading={loading}
