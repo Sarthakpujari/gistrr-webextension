@@ -12,11 +12,11 @@ import {
   Box,
   Textarea,
   useToast,
-  Tabs, 
-  TabList, 
-  TabPanels, 
-  Tab, 
-  TabPanel
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { useEffect, useState, type SetStateAction } from "react";
@@ -79,7 +79,6 @@ export const BookmarkInput = ({
           note: notes,
           ownerId: userId,
         });
-        setLoading(false);
         await insertBrainBookmark({
           brainId,
           bookmarkId: id,
@@ -107,6 +106,7 @@ export const BookmarkInput = ({
           position: "top",
         });
         handleCloseModal();
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -156,7 +156,7 @@ export const BookmarkInput = ({
         <ModalHeader>Add To Your Brain</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Tabs variant='soft-rounded' colorScheme='blue'>
+          <Tabs variant="soft-rounded" colorScheme="blue">
             <TabList>
               <Tab>Save Bookmark</Tab>
               <Tab>Upload Document</Tab>
@@ -252,7 +252,7 @@ export const BookmarkInput = ({
                 </Box>
               </TabPanel>
               <TabPanel>
-              <Box className="bookmark-input">
+                <Box className="bookmark-input">
                   <Box className="input_container">
                     <Text mb="12px" marginTop={2}>
                       Upload:
@@ -264,7 +264,7 @@ export const BookmarkInput = ({
                       width="100%"
                     >
                       <Input
-                        type = "file"
+                        type="file"
                         placeholder="Supports .docx, .pdf, .jpg, .png"
                         onChange={handleFileChange}
                       />
@@ -352,4 +352,3 @@ export const BookmarkInput = ({
     </Modal>
   );
 };
-

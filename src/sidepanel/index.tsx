@@ -41,6 +41,7 @@ function IndexSidePanel() {
   const [loginState, setLoginState] = useState<boolean>(false);
   const [openBookmarkModal, setOpenBookmarkModal] = useState<boolean>(false);
   const [user, setUser] = useState<any>({});
+  const [openAddColabModal, setOpenAddColabModal] = useState<boolean>(false);
   const storage = new Storage();
 
   useEffect(() => {
@@ -49,7 +50,7 @@ function IndexSidePanel() {
   }, []);
 
   const checkStorageToOpenModal = async () => {
-    const userId = await storage.get('userId');
+    const userId = await storage.get("userId");
     storage.get("openBookmarkModal").then((value) => {
       if (value && userId) {
         setOpenBookmarkModal(true);
@@ -139,7 +140,12 @@ function IndexSidePanel() {
     </Tabs>
   );
 
-  const chatLayout = () => <Chatwindow setShowChatWindow={setShowChatWindow} />;
+  const chatLayout = () => (
+    <Chatwindow
+      setShowChatWindow={setShowChatWindow}
+      setOpenAddColabModal={setOpenAddColabModal}
+    />
+  );
 
   const loginScreen = () => (
     <Box
@@ -190,6 +196,8 @@ function IndexSidePanel() {
           <CreateBrain
             openBrainModal={showCreateBrainModal}
             setOpenBrainModal={setShowCreateBrainModal}
+            openAddColabModal={openAddColabModal}
+            setOpenAddColabModal={setOpenAddColabModal}
           />
           <BookmarkInput
             brainList={brainList}

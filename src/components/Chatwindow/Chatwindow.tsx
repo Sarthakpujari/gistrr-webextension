@@ -10,15 +10,15 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Tooltip,
 } from "@chakra-ui/react";
 import moment from "moment";
-import { ArrowLeftIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowLeftIcon } from "@chakra-ui/icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Storage } from "@plasmohq/storage";
 import {
   chat as sendToLLM,
   insertChat as insertChatToAPI,
-  getBrainChat as getBrainChatFromAPI,
 } from "~src/util/Api";
 import { formatLocalTime } from "~src/util/time_format";
 
@@ -27,8 +27,10 @@ import { getChatAndNotif } from "~src/util/Api/ClubbedRequests/GetChat";
 
 export const Chatwindow = ({
   setShowChatWindow,
+  setOpenAddColabModal,
 }: {
   setShowChatWindow: (value: boolean) => void;
+  setOpenAddColabModal: (value: boolean) => void;
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string>("");
@@ -148,10 +150,27 @@ export const Chatwindow = ({
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader className="chat-window-header">
-          <Box className="chat-window-header-icon">
-            <ArrowLeftIcon onClick={handleClose} />
+          <Box display="flex" gap="200px">
+            <Box display="flex" gap="10px">
+              <Box className="chat-window-header-icon">
+                <ArrowLeftIcon onClick={handleClose} />
+              </Box>
+              {brainName}
+            </Box>
+            <Box>
+              <Tooltip
+                label="Add user to collaborate"
+                placement="left"
+                hasArrow
+              >
+                <AddIcon
+                  boxSize={3}
+                  _hover={{ cursor: "pointer" }}
+                  onClick={() => setOpenAddColabModal(true)}
+                />
+              </Tooltip>
+            </Box>
           </Box>
-          {brainName}
         </DrawerHeader>
         <DrawerBody>
           <Box

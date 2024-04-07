@@ -27,7 +27,17 @@ import "./Createbrain.css";
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const isValidEmail = (email: string) => EMAIL_REGEXP.test(email);
 
-export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
+export const CreateBrain = ({
+  openBrainModal,
+  setOpenBrainModal,
+  openAddColabModal,
+  setOpenAddColabModal,
+}: {
+  openBrainModal: boolean;
+  setOpenBrainModal: (value: boolean) => void;
+  openAddColabModal: boolean;
+  setOpenAddColabModal: (value: boolean) => void;
+}) => {
   const [brainName, setBrainName] = useState<string>("");
   const [brainNameError, setBrainNameError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,6 +73,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
       }
       setOpenBrainModal(false);
       setLoading(false);
+      setOpenAddColabModal(false);
       getBrainList();
       toast({
         title: "New Brain created successfully",
@@ -86,7 +97,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
 
   const validateInputFields = () => {
     let errorExists = false;
-    if (!brainName) {
+    if (!brainName && !openAddColabModal) {
       errorExists = true;
       setBrainNameError("Name can't be empty");
     }
@@ -156,42 +167,52 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   };
 
   return (
-    <Modal isOpen={openBrainModal} onClose={() => setOpenBrainModal(false)}>
+    <Modal
+      isOpen={openBrainModal || openAddColabModal}
+      onClose={() => {
+        setOpenBrainModal(false);
+        setOpenAddColabModal(false);
+      }}
+    >
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
       />
       <ModalContent>
-        <ModalHeader>Create Brain</ModalHeader>
+        <ModalHeader>
+          {openAddColabModal ? "Add Brain Users" : "Create Brain"}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Box className="bookmark-input">
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                Brain:
-              </Text>
-              <Box
-                display="flex"
-                flexDirection="column"
-                marginLeft="31px"
-                width="100%"
-              >
-                <Input
-                  placeholder="Enter name of the brain"
-                  value={brainName}
-                  onChange={(e) => {
-                    setBrainNameError("");
-                    setBrainName(e.target.value);
-                  }}
-                  isInvalid={!!brainNameError}
-                />
-                {brainNameError && (
-                  <Box fontSize="12px" marginTop="5px" color="red.500">
-                    {brainNameError}
-                  </Box>
-                )}
+            {!openAddColabModal && (
+              <Box className="input_container">
+                <Text mb="12px" marginTop={2}>
+                  Brain:
+                </Text>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  marginLeft="31px"
+                  width="100%"
+                >
+                  <Input
+                    placeholder="Enter name of the brain"
+                    value={brainName}
+                    onChange={(e) => {
+                      setBrainNameError("");
+                      setBrainName(e.target.value);
+                    }}
+                    isInvalid={!!brainNameError}
+                  />
+                  {brainNameError && (
+                    <Box fontSize="12px" marginTop="5px" color="red.500">
+                      {brainNameError}
+                    </Box>
+                  )}
+                </Box>
               </Box>
-            </Box>
+            )}
             <Box className="input_container1">
               <Text mb="12px" marginTop={2} width="100px">
                 Enter email:
