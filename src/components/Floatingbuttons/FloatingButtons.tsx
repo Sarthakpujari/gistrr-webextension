@@ -1,6 +1,7 @@
 import { Storage } from "@plasmohq/storage";
 import { BookmarkIcon } from "../Icons/BookmarkIcon";
 import { usePort } from "@plasmohq/messaging/hook";
+import { GistrrIcon } from "../Icons/gistrrlogo";
 
 export const FloatingButtons = ({
   setOpenBookmarkModal,
@@ -42,7 +43,8 @@ export const FloatingButtons = ({
           transition: "background-color 0.3s",
         }}
       >
-        <BookmarkIcon />
+        {/* <BookmarkIcon /> */}
+        <GistrrIcon/>
       </div>
     </div>
   );

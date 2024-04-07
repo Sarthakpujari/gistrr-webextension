@@ -30,7 +30,6 @@ const isValidEmail = (email: string) => EMAIL_REGEXP.test(email);
 export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
   const [brainName, setBrainName] = useState<string>("");
   const [brainNameError, setBrainNameError] = useState<string>("");
-  const [collabEmail, setCollabEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [emailInput, setEmailInput] = useState<string>("");
   const [emailList, setEmailList] = useState<string[]>([]);
@@ -47,10 +46,11 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
         userId,
         brainId: id,
       });
-      if (collabEmail !== "") {
-        const dummyName = collabEmail.match(/^([^@]+)/)[1];
+      // Handle multiple collaborator emails
+      for (const email of emailList) {
+        const dummyName = email.match(/^([^@]+)/)[1];
         const newUserId = await CreateUser({
-          email: collabEmail,
+          email: email,
           name: dummyName,
           profileImageUrl: "",
         });
@@ -72,7 +72,7 @@ export const CreateBrain = ({ openBrainModal, setOpenBrainModal }) => {
         position: "top",
       });
       setBrainName("");
-      setCollabEmail("");
+      setEmailList([]); // Clear the email list after processing
     } else {
       console.error("User not found");
     }

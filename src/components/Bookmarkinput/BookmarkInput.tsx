@@ -12,6 +12,11 @@ import {
   Box,
   Textarea,
   useToast,
+  Tabs, 
+  TabList, 
+  TabPanels, 
+  Tab, 
+  TabPanel
 } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { useEffect, useState, type SetStateAction } from "react";
@@ -44,6 +49,8 @@ export const BookmarkInput = ({
   const [brainId, setBrainId] = useState<string>("");
   const [brainError, setBrainError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [fileUploadTitle, setFileUploadTitle] = useState<string>("");
 
   useEffect(() => {
     getBookmarkDetails();
@@ -134,6 +141,11 @@ export const BookmarkInput = ({
     return errorExists;
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    setUploadedFile(file);
+  };
+
   return (
     <Modal isOpen={openBookmarkModal} onClose={handleCloseModal}>
       <ModalOverlay
@@ -141,96 +153,190 @@ export const BookmarkInput = ({
         backdropFilter="blur(10px) hue-rotate(90deg)"
       />
       <ModalContent>
-        <ModalHeader>Save Bookmark</ModalHeader>
+        <ModalHeader>Add To Your Brain</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box className="bookmark-input">
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                URL:
-              </Text>
-              <Box
-                display="flex"
-                flexDirection="column"
-                marginLeft="10px"
-                width="100%"
-              >
-                <Input
-                  placeholder="Enter bookmark URL"
-                  value={url}
-                  onChange={(e) => {
-                    setUrl(e.target.value);
-                    setUrlError("");
-                  }}
-                  isInvalid={!!urlError}
-                />
-                {urlError && (
-                  <Box fontSize="12px" marginTop="5px" color="red.500">
-                    {urlError}
+          <Tabs variant='soft-rounded' colorScheme='blue'>
+            <TabList>
+              <Tab>Save Bookmark</Tab>
+              <Tab>Upload Document</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Box className="bookmark-input">
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      URL:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        placeholder="Enter bookmark URL"
+                        value={url}
+                        onChange={(e) => {
+                          setUrl(e.target.value);
+                          setUrlError("");
+                        }}
+                        isInvalid={!!urlError}
+                      />
+                      {urlError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {urlError}
+                        </Box>
+                      )}
+                    </Box>
                   </Box>
-                )}
-              </Box>
-            </Box>
-            <Box className="input_container_textarea">
-              <Text mb="12px" marginTop={2}>
-                Notes:
-              </Text>
-              <Textarea
-                placeholder="Enter your notes here"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </Box>
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                Title:
-              </Text>
-              <Box
-                display="flex"
-                flexDirection="column"
-                marginLeft="10px"
-                width="100%"
-              >
-                <Input
-                  placeholder="Enter title"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                    setTitleError("");
-                  }}
-                  isInvalid={!!titleError}
-                />
-                {titleError && (
-                  <Box fontSize="12px" marginTop="5px" color="red.500">
-                    {titleError}
+                  <Box className="input_container_textarea">
+                    <Text mb="12px" marginTop={2}>
+                      Notes:
+                    </Text>
+                    <Textarea
+                      placeholder="Enter your notes here"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    />
                   </Box>
-                )}
-              </Box>
-            </Box>
-            <Box className="input_container">
-              <Text mb="12px" marginTop={2}>
-                Brain:
-              </Text>
-              <Box width="100%">
-                <Select
-                  size="lg"
-                  options={brainList?.map((item) => {
-                    const { name, id } = item.brain;
-                    return { value: id, label: name };
-                  })}
-                  onChange={(selectedOption) => {
-                    setBrainError("");
-                    setBrainId(selectedOption.value);
-                  }}
-                />
-              </Box>
-            </Box>
-            {brainError && (
-              <Box fontSize="12px" color="red.500" marginLeft="51px">
-                {brainError}
-              </Box>
-            )}
-          </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Title:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        placeholder="Enter title"
+                        value={title}
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                          setTitleError("");
+                        }}
+                        isInvalid={!!titleError}
+                      />
+                      {titleError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {titleError}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Brain:
+                    </Text>
+                    <Box width="100%">
+                      <Select
+                        size="lg"
+                        options={brainList?.map((item) => {
+                          const { name, id } = item.brain;
+                          return { value: id, label: name };
+                        })}
+                        onChange={(selectedOption) => {
+                          setBrainError("");
+                          setBrainId(selectedOption.value);
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  {brainError && (
+                    <Box fontSize="12px" color="red.500" marginLeft="51px">
+                      {brainError}
+                    </Box>
+                  )}
+                </Box>
+              </TabPanel>
+              <TabPanel>
+              <Box className="bookmark-input">
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Upload:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        type = "file"
+                        placeholder="Supports .docx, .pdf, .jpg, .png"
+                        onChange={handleFileChange}
+                      />
+                      {urlError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {urlError}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="input_container_textarea">
+                    <Text mb="12px" marginTop={2}>
+                      Notes:
+                    </Text>
+                    <Textarea
+                      placeholder="Enter your notes here"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    />
+                  </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Title:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        placeholder="Enter new title"
+                        value={fileUploadTitle}
+                        onChange={(e) => {
+                          setFileUploadTitle("");
+                        }}
+                        isInvalid={!!titleError}
+                      />
+                      {titleError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {titleError}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Brain:
+                    </Text>
+                    <Box width="100%">
+                      <Select
+                        size="lg"
+                        options={brainList?.map((item) => {
+                          const { name, id } = item.brain;
+                          return { value: id, label: name };
+                        })}
+                        onChange={(selectedOption) => {
+                          setBrainError("");
+                          setBrainId(selectedOption.value);
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  {brainError && (
+                    <Box fontSize="12px" color="red.500" marginLeft="51px">
+                      {brainError}
+                    </Box>
+                  )}
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </ModalBody>
         <ModalFooter>
           <Button
@@ -246,3 +352,4 @@ export const BookmarkInput = ({
     </Modal>
   );
 };
+
