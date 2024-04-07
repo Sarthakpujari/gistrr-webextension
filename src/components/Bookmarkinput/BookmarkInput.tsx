@@ -299,7 +299,7 @@ export const BookmarkInput = ({
                         placeholder="Enter new title"
                         value={fileUploadTitle}
                         onChange={(e) => {
-                          setFileUploadTitle("");
+                          setFileUploadTitle(e.target.value);
                         }}
                         isInvalid={!!titleError}
                       />

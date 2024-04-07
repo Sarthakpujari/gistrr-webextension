@@ -6,7 +6,7 @@ import {
   InputRightElement,
   Tooltip,
 } from "@chakra-ui/react";
-import { Search2Icon, SmallCloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { Search2Icon, SmallCloseIcon, PlusSquareIcon,ArrowUpIcon } from "@chakra-ui/icons";
 import type { ChangeEvent } from "react";
 
 export const SearchBar = ({
@@ -14,15 +14,17 @@ export const SearchBar = ({
   setSearchTerm,
   onChangeHandler,
   setShowCreateBrainModal,
+  setOpenBookmarkModal
 }: {
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   setShowCreateBrainModal: (value: boolean) => void;
   onChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
+  setOpenBookmarkModal: (value: boolean) => void;
 }) => {
   return (
     <Box
-      width="95%"
+      width="90%"
       display="flex"
       gap="10px"
       flexDirection="row"
@@ -57,7 +59,16 @@ export const SearchBar = ({
         </InputGroup>
       </Box>
       <Box>
-        <Tooltip hasArrow label="Create brain" size="lg" placement="left">
+        <Tooltip hasArrow label="Add to Brain" size="lg" placement="left">
+          <ArrowUpIcon
+            boxSize={5}
+            cursor="pointer"
+            onClick={() => setOpenBookmarkModal(true)}
+          />
+        </Tooltip>
+      </Box>
+      <Box>
+        <Tooltip hasArrow label="Create Brain" size="lg" placement="top">
           <PlusSquareIcon
             boxSize={5}
             cursor="pointer"

@@ -45,7 +45,7 @@ function IndexSidePanel() {
 
   useEffect(() => {
     checkLoginState();
-    checkStorageToOpenModal();
+    // checkStorageToOpenModal();
   }, []);
 
   const checkStorageToOpenModal = async () => {
@@ -129,6 +129,7 @@ function IndexSidePanel() {
             closeDrawerOpenChat={() => {}}
             setShowChatWindow={setShowChatWindow}
             setShowCreateBrainModal={setShowCreateBrainModal}
+            setOpenBookmarkModal={setOpenBookmarkModal}
           />
         </TabPanel>
         <TabPanel paddingLeft={0} paddingRight={0}>

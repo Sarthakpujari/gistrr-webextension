@@ -11,10 +11,12 @@ export const Brainpanel = ({
   setShowChatWindow,
   closeDrawerOpenChat,
   setShowCreateBrainModal,
+  setOpenBookmarkModal
 }: {
   closeDrawerOpenChat: () => void;
   setShowChatWindow: (show: boolean) => void;
   setShowCreateBrainModal: (show: boolean) => void;
+  setOpenBookmarkModal: (show: boolean) => void;
 }) => {
   const { brainList } = useContext(BrainContext);
   const [filteredList, setFilteredList] = useState<any[]>(brainList);
@@ -41,6 +43,8 @@ export const Brainpanel = ({
         onChangeHandler={onChangeHandler}
         setSearchTerm={setSearchTerm}
         setShowCreateBrainModal={setShowCreateBrainModal}
+        setOpenBookmarkModal={setOpenBookmarkModal}
+        
       />
       {filteredList.map((brain, index) => (
         <SingleBrain
