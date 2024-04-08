@@ -1,12 +1,8 @@
 import { Storage } from "@plasmohq/storage";
-import { BookmarkIcon } from "../Icons/BookmarkIcon";
 import { usePort } from "@plasmohq/messaging/hook";
 import { GistrrIcon } from "../Icons/gistrrlogo";
 
-export const FloatingButtons = ({
-  setOpenBookmarkModal,
-  hideFloatingButtons,
-}) => {
+export const FloatingButtons = ({ hideFloatingButtons }) => {
   const port = usePort("panel");
   const storage = new Storage();
 
@@ -44,7 +40,7 @@ export const FloatingButtons = ({
         }}
       >
         {/* <BookmarkIcon /> */}
-        <GistrrIcon/>
+        <GistrrIcon />
       </div>
     </div>
   );
