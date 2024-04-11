@@ -59,6 +59,8 @@ export const BookmarkInput = ({
   const getBookmarkDetails = async () => {
     const pageTitle = await storage.get("bookmark-page-title");
     const pageUrl = await storage.get("bookmark-page-url");
+    console.log("t1 >>> ", pageTitle);
+    console.log("t2 >>> ", pageUrl);
     setTitle(pageTitle);
     setUrl(pageUrl);
   };
@@ -147,7 +149,7 @@ export const BookmarkInput = ({
   };
 
   return (
-    <Modal isOpen={openBookmarkModal} onClose={handleCloseModal}>
+    <Modal isOpen={true} onClose={handleCloseModal}>
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"

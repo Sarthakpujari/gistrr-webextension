@@ -46,18 +46,7 @@ function IndexSidePanel() {
 
   useEffect(() => {
     checkLoginState();
-    // checkStorageToOpenModal();
   }, []);
-
-  const checkStorageToOpenModal = async () => {
-    const userId = await storage.get("userId");
-    storage.get("openBookmarkModal").then((value) => {
-      if (value && userId) {
-        setOpenBookmarkModal(true);
-        storage.remove("openBookmarkModal");
-      }
-    });
-  };
 
   const checkLoginState = async () => {
     const userId = await storage.get("userId");
@@ -199,11 +188,13 @@ function IndexSidePanel() {
             openAddColabModal={openAddColabModal}
             setOpenAddColabModal={setOpenAddColabModal}
           />
-          <BookmarkInput
-            brainList={brainList}
-            openBookmarkModal={openBookmarkModal}
-            setOpenBookmarkModal={setOpenBookmarkModal}
-          />
+          {openBookmarkModal && (
+            <BookmarkInput
+              brainList={brainList}
+              openBookmarkModal={openBookmarkModal}
+              setOpenBookmarkModal={setOpenBookmarkModal}
+            />
+          )}
         </BrainContext.Provider>
       </UserContext.Provider>
     </ChakraProvider>

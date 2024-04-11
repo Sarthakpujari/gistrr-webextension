@@ -9,8 +9,8 @@ export const FloatingButtons = ({ hideFloatingButtons }) => {
   const handleBookmarkButtonClick = async () => {
     port.send({ action: "toggle-panel-state" });
     storage.set("openBookmarkModal", true);
-    storage.set("bookmark-page-url", window.location.href);
-    storage.set("bookmark-page-title", document.title);
+    await storage.set("bookmark-page-url", window.location.href);
+    await storage.set("bookmark-page-title", document.title);
   };
 
   if (hideFloatingButtons) return null;

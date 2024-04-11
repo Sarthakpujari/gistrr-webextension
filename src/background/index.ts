@@ -10,8 +10,13 @@ chrome.sidePanel
 const storage = new Storage();
 
 const setUrlTitleToStorage = async (url, title) => {
-  storage.set("bookmark-page-url", url);
-  storage.set("bookmark-page-title", title);
+  await storage.set("bookmark-page-url", url);
+  await storage.set("bookmark-page-title", title);
+
+  const r1 = await storage.get("bookmark-page-url");
+  const r2 = await storage.get("bookmark-page-title");
+  console.log("r1 >>> ", r1);
+  console.log("r2 >>> ", r2);
 };
 
 (async () => {
