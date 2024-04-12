@@ -160,8 +160,9 @@ export const BookmarkInput = ({
         <ModalBody>
           <Tabs variant="soft-rounded" colorScheme="blue">
             <TabList>
-              <Tab>Save Bookmark</Tab>
-              <Tab>Upload Document</Tab>
+              <Tab>Link</Tab>
+              <Tab>Doc</Tab>
+              <Tab>Photo</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -267,7 +268,91 @@ export const BookmarkInput = ({
                     >
                       <Input
                         type="file"
-                        placeholder="Supports .docx, .pdf, .jpg, .png"
+                        placeholder="Supports .docx, .pdf"
+                        onChange={handleFileChange}
+                      />
+                      {urlError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {urlError}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="input_container_textarea">
+                    <Text mb="12px" marginTop={2}>
+                      Notes:
+                    </Text>
+                    <Textarea
+                      placeholder="Enter your notes here"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    />
+                  </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Title:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        placeholder="Enter new title"
+                        value={fileUploadTitle}
+                        onChange={(e) => {
+                          setFileUploadTitle(e.target.value);
+                        }}
+                        isInvalid={!!titleError}
+                      />
+                      {titleError && (
+                        <Box fontSize="12px" marginTop="5px" color="red.500">
+                          {titleError}
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Brain:
+                    </Text>
+                    <Box width="100%">
+                      <Select
+                        size="lg"
+                        options={brainList?.map((item) => {
+                          const { name, id } = item.brain;
+                          return { value: id, label: name };
+                        })}
+                        onChange={(selectedOption) => {
+                          setBrainError("");
+                          setBrainId(selectedOption.value);
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  {brainError && (
+                    <Box fontSize="12px" color="red.500" marginLeft="51px">
+                      {brainError}
+                    </Box>
+                  )}
+                </Box>
+              </TabPanel>
+              <TabPanel>
+                <Box className="bookmark-input">
+                  <Box className="input_container">
+                    <Text mb="12px" marginTop={2}>
+                      Upload:
+                    </Text>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      marginLeft="10px"
+                      width="100%"
+                    >
+                      <Input
+                        type="file"
+                        placeholder="Supports .jpg, .png"
                         onChange={handleFileChange}
                       />
                       {urlError && (

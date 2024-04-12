@@ -159,7 +159,7 @@ export const Chatwindow = ({
             </Box>
             <Box>
               <Tooltip
-                label="Add user to collaborate"
+                label="Add collaborators"
                 placement="left"
                 hasArrow
               >
